@@ -1,8 +1,9 @@
 from backend.app.models import User
 from backend.app.repositories import UserRepository
+from backend.core.controller import BaseController
 
 
-class UserController:
+class UserController(BaseController[User]):
     def __init__(self, user_repository: UserRepository):
         super().__init__(model=User, repository=user_repository)
         self.user_repository = user_repository

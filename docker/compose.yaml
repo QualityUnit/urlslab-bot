@@ -1,0 +1,38 @@
+version: '1'
+services:
+  mariadb:
+    image: mariadb:11
+    hostname: mariadb
+    container_name: urlslab-bot-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: 'test'
+      REPLICATION_PASSWORD: 'test'
+      MYSQL_DATABASE: urlslab-bot
+      MYSQL_USER: urlslab-bot
+      MYSQL_PASSWORD: test
+    ports:
+      - 23306:3306/tcp
+    volumes:
+      - ./mariadb:/var/lib/mysql
+      - ./sqldir:/docker-entrypoint-initdb.d
+    command:
+      --wait_timeout=28800
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
+      --max-allowed-packet=512M
+      --net-buffer-length=5048576
+      --wsrep-new-cluster
+    stdin_open: true
+    tty: true
+    privileged: true
+    ulimits:
+      nofile:
+        soft: 600000
+        hard: 640000
+
+  redis:
+    image: 'redis:7.0.7'
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes

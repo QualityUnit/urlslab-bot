@@ -20,7 +20,7 @@ def reset_session_context(context: Token) -> None:
     session_context.reset(context)
 
 
-engine = create_engine(config.POSTGRES_URL, pool_recycle=3600)
+engine = create_engine(config.MARIADB_URL, pool_recycle=3600)
 session: Session = Session(engine)
 
 

@@ -2,7 +2,7 @@ from functools import partial
 
 from fastapi import Depends
 
-from backend.app.controllers import AuthController, TaskController, UserController
+from backend.app.controllers import AuthController, UserController
 from backend.app.models import Task, User
 from backend.app.repositories import TaskRepository, UserRepository
 from backend.core.database import get_session
@@ -21,11 +21,6 @@ class Factory:
     def get_user_controller(self, db_session=Depends(get_session)):
         return UserController(
             user_repository=self.user_repository(db_session=db_session)
-        )
-
-    def get_task_controller(self, db_session=Depends(get_session)):
-        return TaskController(
-            task_repository=self.task_repository(db_session=db_session)
         )
 
     def get_auth_controller(self, db_session=Depends(get_session)):

@@ -2,14 +2,15 @@ from sqlalchemy import Select
 from sqlalchemy.orm import joinedload
 
 from backend.app.models import User
+from backend.core.repository import BaseRepository
 
 
-class UserRepository:
+class UserRepository(BaseRepository[User]):
     """
     User repository provides all the database operations for the User model.
     """
 
-    async def get_by_username(
+    def get_by_username(
             self, username: str, join_: set[str] | None = None
     ) -> User | None:
         """
@@ -19,9 +20,15 @@ class UserRepository:
         :param join_: Join relations.
         :return: User.
         """
-        return None
+        query = self._query(join_)
+        query = query.filter(User.username == username)
 
-    async def get_by_email(
+        if join_ is not None:
+            return self.all_unique(query)
+
+        return self._one_or_none(query)
+
+    def get_by_email(
             self, email: str, join_: set[str] | None = None
     ) -> User | None:
         """
@@ -31,7 +38,13 @@ class UserRepository:
         :param join_: Join relations.
         :return: User.
         """
-        return None
+        query = self._query(join_)
+        query = query.filter(User.email == email)
+
+        if join_ is not None:
+            return self.all_unique(query)
+
+        return self._one_or_none(query)
 
     def _join_tasks(self, query: Select) -> Select:
         """
