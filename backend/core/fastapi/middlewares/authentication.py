@@ -7,8 +7,8 @@ from starlette.middleware.authentication import (
 )
 from starlette.requests import HTTPConnection
 
-from app.schemas.extras.current_user import CurrentUser
-from core.config import config
+from backend.app.schemas.extras.current_user import CurrentUser
+from backend.core.config import config
 
 
 class AuthBackend(AuthenticationBackend):
