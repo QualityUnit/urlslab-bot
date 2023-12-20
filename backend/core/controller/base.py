@@ -17,7 +17,7 @@ class BaseController(Generic[ModelType]):
         self.model_class = model
         self.repository = repository
 
-    def get_by_id(self, id_: int, join_: set[str] | None = None) -> ModelType:
+    async def get_by_id(self, id_: int, join_: set[str] | None = None) -> ModelType:
         """
         Returns the model instance matching the id.
 
@@ -26,7 +26,7 @@ class BaseController(Generic[ModelType]):
         :return: The model instance.
         """
 
-        db_obj = self.repository.get_by(
+        db_obj = await self.repository.get_by(
             field="id", value=id_, join_=join_, unique=True
         )
         if not db_obj:
@@ -36,7 +36,7 @@ class BaseController(Generic[ModelType]):
 
         return db_obj
 
-    def get_by_uuid(self, uuid: UUID, join_: set[str] | None = None) -> ModelType:
+    async def get_by_uuid(self, uuid: UUID, join_: set[str] | None = None) -> ModelType:
         """
         Returns the model instance matching the uuid.
 
@@ -45,7 +45,7 @@ class BaseController(Generic[ModelType]):
         :return: The model instance.
         """
 
-        db_obj = self.repository.get_by(
+        db_obj = await self.repository.get_by(
             field="uuid", value=uuid, join_=join_, unique=True
         )
         if not db_obj:
@@ -54,7 +54,7 @@ class BaseController(Generic[ModelType]):
             )
         return db_obj
 
-    def get_all(
+    async def get_all(
         self, skip: int = 0, limit: int = 100, join_: set[str] | None = None
     ) -> list[ModelType]:
         """
@@ -66,27 +66,27 @@ class BaseController(Generic[ModelType]):
         :return: A list of records.
         """
 
-        response = self.repository.get_all(skip, limit, join_)
+        response = await self.repository.get_all(skip, limit, join_)
         return response
 
-    def create(self, attributes: dict[str, Any]) -> ModelType:
+    async def create(self, attributes: dict[str, Any]) -> ModelType:
         """
         Creates a new Object in the DB.
 
         :param attributes: The attributes to create the object with.
         :return: The created object.
         """
-        create = self.repository.create(attributes)
+        create = await self.repository.create(attributes)
         return create
 
-    def delete(self, model: ModelType) -> bool:
+    async def delete(self, model: ModelType) -> bool:
         """
         Deletes the Object from the DB.
 
         :param model: The model to delete.
         :return: True if the object was deleted, False otherwise.
         """
-        delete = self.repository.delete(model)
+        delete = await self.repository.delete(model)
         return delete
 
     @staticmethod
