@@ -1,6 +1,6 @@
 from contextvars import ContextVar, Token
 
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import Session, declarative_base
 
 from backend.core.config import config
@@ -20,8 +20,8 @@ def reset_session_context(context: Token) -> None:
     session_context.reset(context)
 
 
-engine = create_engine(config.MARIADB_URL, pool_recycle=3600)
-session: Session = Session(engine)
+engine = create_async_engine(config.MARIADB_URL, pool_recycle=3600, echo=True)
+session: AsyncSession = AsyncSession(engine)
 
 
 async def get_session():
@@ -34,7 +34,7 @@ async def get_session():
     try:
         yield session
     finally:
-        session.close()
+        await session.close()
 
 
 Base = declarative_base()

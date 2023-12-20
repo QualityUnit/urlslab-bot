@@ -2,7 +2,7 @@ from functools import reduce
 from typing import Any, Generic, Type, TypeVar
 
 from sqlalchemy import Select, func
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.expression import select
 
 from backend.core.database import Base
@@ -13,11 +13,11 @@ ModelType = TypeVar("ModelType", bound=Base)
 class BaseRepository(Generic[ModelType]):
     """Base class for data repositories."""
 
-    def __init__(self, model: Type[ModelType], db_session: Session):
+    def __init__(self, model: Type[ModelType], db_session: AsyncSession):
         self.session = db_session
         self.model_class: Type[ModelType] = model
 
-    def create(self, attributes: dict[str, Any] = None) -> ModelType:
+    async def create(self, attributes: dict[str, Any] = None) -> ModelType:
         """
         Creates the model instance.
 
@@ -28,9 +28,10 @@ class BaseRepository(Generic[ModelType]):
             attributes = {}
         model = self.model_class(**attributes)
         self.session.add(model)
+        await self.session.commit()
         return model
 
-    def get_all(
+    async def get_all(
             self, skip: int = 0, limit: int = 100, join_: set[str] | None = None
     ) -> list[ModelType]:
         """
@@ -45,11 +46,11 @@ class BaseRepository(Generic[ModelType]):
         query = query.offset(skip).limit(limit)
 
         if join_ is not None:
-            return self.all_unique(query)
+            return await self.all_unique(query)
 
-        return self._all(query)
+        return await self._all(query)
 
-    def get_by(
+    async def get_by(
             self,
             field: str,
             value: Any,
@@ -68,20 +69,20 @@ class BaseRepository(Generic[ModelType]):
         query = self._get_by(query, field, value)
 
         if join_ is not None:
-            return self.all_unique(query)
+            return await self.all_unique(query)
         if unique:
-            return self._one(query)
+            return await self._one(query)
 
         return self._all(query)
 
-    def delete(self, model: ModelType) -> None:
+    async def delete(self, model: ModelType) -> None:
         """
         Deletes the model.
 
         :param model: The model to delete.
         :return: None
         """
-        self.session.delete(model)
+        await self.session.delete(model)
 
     def _query(
             self,
@@ -101,36 +102,36 @@ class BaseRepository(Generic[ModelType]):
 
         return query
 
-    def _all(self, query: Select) -> list[ModelType]:
+    async def _all(self, query: Select) -> list[ModelType]:
         """
         Returns all results from the query.
 
         :param query: The query to execute.
         :return: A list of model instances.
         """
-        query = self.session.scalars(query)
+        query = await self.session.scalars(query)
         return query.all()
 
-    def _all_unique(self, query: Select) -> list[ModelType]:
-        result = self.session.execute(query)
+    async def _all_unique(self, query: Select) -> list[ModelType]:
+        result = await self.session.execute(query)
         return result.unique().scalars().all()
 
-    def _first(self, query: Select) -> ModelType | None:
+    async def _first(self, query: Select) -> ModelType | None:
         """
         Returns the first result from the query.
 
         :param query: The query to execute.
         :return: The first model instance.
         """
-        query = self.session.scalars(query)
+        query = await self.session.scalars(query)
         return query.first()
 
-    def _one_or_none(self, query: Select) -> ModelType | None:
+    async def _one_or_none(self, query: Select) -> ModelType | None:
         """Returns the first result from the query or None."""
-        query = self.session.scalars(query)
+        query = await self.session.scalars(query)
         return query.one_or_none()
 
-    def _one(self, query: Select) -> ModelType:
+    async def _one(self, query: Select) -> ModelType:
         """
         Returns the first result from the query or raises NoResultFound.
 
@@ -138,9 +139,9 @@ class BaseRepository(Generic[ModelType]):
         :return: The first model instance.
         """
         query = self.session.scalars(query)
-        return query.one()
+        return await query.one()
 
-    def _count(self, query: Select) -> int:
+    async def _count(self, query: Select) -> int:
         """
         Returns the count of the records.
 
@@ -148,7 +149,7 @@ class BaseRepository(Generic[ModelType]):
         """
         query = query.subquery()
         query = self.session.scalars(select(func.count()).select_from(query))
-        return query.one()
+        return await query.one()
 
     def _sort_by(
             self,

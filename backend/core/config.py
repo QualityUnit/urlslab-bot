@@ -1,7 +1,7 @@
 import os
 
 from pydantic import PostgresDsn
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Config(BaseSettings):
@@ -13,16 +13,17 @@ class Config(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRE_MINUTES: int = 60 * 24
     SECRET_KEY: str = "super-secret-key"
+    MARIADB_URL: str = "mariadb+pymysql://user:password@127.0.0.1:5432/urlslab-bot"
 
 
 class DevelopmentConfig(Config):
-    MARIADB_URL: str = "mariadb+pymysql://user:password@127.0.0.1:5432/urlslab-bot"
+    model_config = SettingsConfigDict(env_file='.env.dev', env_file_encoding='utf-8')
 
 
 class ProductionConfig(Config):
     ENV: str = "prod"
     DEBUG: bool = False
-    MARIADB_URL: str = "mariadb+pymysql://user:password@127.0.0.1:5432/urlslab-bot"
+    model_config = SettingsConfigDict(env_file='.env.prod', env_file_encoding='utf-8')
 
 
 def get_config():

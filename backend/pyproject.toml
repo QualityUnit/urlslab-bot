@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10.0, <3.12"
-pydantic = {version = "^2.5.2", extras = ["email"]}
+pydantic = { version = "^2.5.2", extras = ["email"] }
 pydantic-settings = "^2.1.0"
 fastapi = "^0.105.0"
 langchain = "^0.0.350"
@@ -20,5 +20,7 @@ uvicorn = "^0.24.0"
 SQLAlchemy = "^2.0.23"
 python-jose = "^3.3.0"
 passlib = "^1.7.4"
-pymysql = "^1.1.0"
+asyncmy = "^0.2.9"
+pymysql = "^1.1.0" # used for migration alembic
 pylint = "^3.0.3"
+alembic = "^1.13.0"

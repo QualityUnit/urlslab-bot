@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from pydantic import EmailStr
 
 from backend.app.models import User
@@ -13,31 +15,32 @@ class AuthController(BaseController[User]):
         super().__init__(model=User, repository=user_repository)
         self.user_repository = user_repository
 
-    def register(self, email: EmailStr, password: str, username: str) -> User:
+    async def register(self, email: EmailStr, password: str, username: str) -> User:
         # Check if user exists with email
-        user = self.user_repository.get_by_email(email)
+        user = await self.user_repository.get_by_email(email)
 
         if user:
             raise BadRequestException("User already exists with this email")
 
         # Check if user exists with username
-        user = self.user_repository.get_by_username(username)
+        user = await self.user_repository.get_by_username(username)
 
         if user:
             raise BadRequestException("User already exists with this username")
 
         password = PasswordHandler.hash(password)
 
-        return self.user_repository.create(
+        return await self.user_repository.create(
             {
                 "email": email,
                 "password": password,
                 "username": username,
+                "uuid": uuid4(),
             }
         )
 
-    def login(self, email: EmailStr, password: str) -> Token:
-        user = self.user_repository.get_by_email(email)
+    async def login(self, email: EmailStr, password: str) -> Token:
+        user = await self.user_repository.get_by_email(email)
 
         if not user:
             raise BadRequestException("Invalid credentials")

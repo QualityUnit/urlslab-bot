@@ -3,8 +3,8 @@ from functools import partial
 from fastapi import Depends
 
 from backend.app.controllers import AuthController, UserController
-from backend.app.models import Task, User
-from backend.app.repositories import TaskRepository, UserRepository
+from backend.app.models import User
+from backend.app.repositories import UserRepository
 from backend.core.database import get_session
 
 
@@ -15,7 +15,6 @@ class Factory:
     """
 
     # Repositories
-    task_repository = partial(TaskRepository, Task)
     user_repository = partial(UserRepository, User)
 
     def get_user_controller(self, db_session=Depends(get_session)):
