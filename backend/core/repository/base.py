@@ -28,7 +28,6 @@ class BaseRepository(Generic[ModelType]):
             attributes = {}
         model = self.model_class(**attributes)
         self.session.add(model)
-        await self.session.commit()
         return model
 
     async def get_all(
@@ -138,8 +137,8 @@ class BaseRepository(Generic[ModelType]):
         :param query: The query to execute.
         :return: The first model instance.
         """
-        query = self.session.scalars(query)
-        return await query.one()
+        query = await self.session.scalars(query)
+        return query.one()
 
     async def _count(self, query: Select) -> int:
         """

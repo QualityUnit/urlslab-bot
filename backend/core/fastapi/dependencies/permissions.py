@@ -20,9 +20,9 @@ class InsufficientPermissionsException(CustomException):
     message = "Insufficient permissions"
 
 
-def get_user_principals(
-    request: Request,
-    user_controller: UserController = Depends(Factory().get_user_controller),
+async def get_user_principals(
+        request: Request,
+        user_controller: UserController = Depends(Factory().get_user_controller),
 ) -> list:
     user_id = request.user.id
     principals = [Everyone]
@@ -30,13 +30,10 @@ def get_user_principals(
     if not user_id:
         return principals
 
-    user = user_controller.get_by_id(id_=user_id)
+    user = await user_controller.get_by_id(id_=user_id)
 
     principals.append(Authenticated)
     principals.append(UserPrincipal(user.id))
-
-    if user.is_admin:
-        principals.append(RolePrincipal("admin"))
 
     return principals
 

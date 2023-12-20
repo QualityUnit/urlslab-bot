@@ -1,9 +1,10 @@
 from enum import Enum
+from typing import List
 from uuid import uuid4
 
 from sqlalchemy import BigInteger, Boolean, Column, Unicode
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from backend.core.database import Base
 from backend.core.database.mixins import TimestampMixin
@@ -25,6 +26,7 @@ class User(Base, TimestampMixin):
     email = Column(Unicode(255), nullable=False, unique=True)
     password = Column(Unicode(255), nullable=False)
     username = Column(Unicode(255), nullable=False, unique=True)
+    tenants = relationship('Tenant', back_populates="user")
 
     def __acl__(self):
         basic_permissions = [UserPermission.READ, UserPermission.CREATE]
