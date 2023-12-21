@@ -42,13 +42,13 @@ async def create_tenant(
     return task
 
 
-@tenant_router.get("/{tenant_uuid}", response_model=TenantResponse)
+@tenant_router.get("/{tenant_id}", response_model=TenantResponse)
 async def get_tenant(
-    tenant_uuid: str,
+    tenant_id: int,
     tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
     assert_access: Callable = Depends(Permissions(TenantPermission.READ)),
 ) -> TenantResponse:
-    task = await tenant_controller.get_by_uuid(UUID(tenant_uuid))
+    task = await tenant_controller.get_by_id(tenant_id)
 
     assert_access(task)
     return task

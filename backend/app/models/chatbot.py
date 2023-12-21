@@ -26,7 +26,6 @@ class Chatbot(Base, TimestampMixin):
     __tablename__ = "chatbots"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    uuid = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
     title = Column(String(255), nullable=False)
     system_prompt = Column(Text, nullable=False)
 
@@ -38,16 +37,4 @@ class Chatbot(Base, TimestampMixin):
     __mapper_args__ = {"eager_defaults": True}
 
     def __acl__(self):
-        basic_permissions = [ChatbotPermission.CREATE]
-        self_permissions = [
-            ChatbotPermission.READ,
-            ChatbotPermission.EDIT,
-            ChatbotPermission.DELETE,
-        ]
-        all_permissions = list(ChatbotPermission)
-
-        return [
-            (Allow, Authenticated, basic_permissions),
-            (Allow, UserPrincipal(self.tenant.user_id), self_permissions),
-            (Allow, RolePrincipal("admin"), all_permissions),
-        ]
+        raise ValueError("Chatbots Permissions are managed by tenants.")

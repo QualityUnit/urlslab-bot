@@ -2,9 +2,9 @@ from functools import partial
 
 from fastapi import Depends
 
-from backend.app.controllers import AuthController, UserController, TenantController
-from backend.app.models import User, Tenant
-from backend.app.repositories import UserRepository, TenantRepository
+from backend.app.controllers import AuthController, UserController, TenantController, ChatbotController
+from backend.app.models import User, Tenant, Chatbot
+from backend.app.repositories import UserRepository, TenantRepository, ChatbotRepository
 from backend.core.database.session import SessionLocal
 
 
@@ -17,6 +17,7 @@ class Factory:
     # Repositories
     user_repository = partial(UserRepository, User)
     tenant_repository = partial(TenantRepository, Tenant)
+    chatbot_repository = partial(ChatbotRepository, Chatbot)
 
     def get_user_controller(self):
         return UserController(
@@ -30,5 +31,11 @@ class Factory:
 
     def get_tenant_controller(self):
         return TenantController(
+            tenant_repository=self.tenant_repository(session_factory=SessionLocal)
+        )
+
+    def get_chatbot_controller(self):
+        return ChatbotController(
+            chatbot_repository=self.chatbot_repository(session_factory=SessionLocal),
             tenant_repository=self.tenant_repository(session_factory=SessionLocal)
         )

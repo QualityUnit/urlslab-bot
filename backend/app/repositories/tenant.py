@@ -22,6 +22,6 @@ class TenantRepository(BaseRepository[Tenant]):
         query = self._get_by(query, "user_id", user_id)
 
         if join_ is not None:
-            return await self.all_unique(query)
+            return await self._all_unique(query)
 
         return await self._all(query)

@@ -22,7 +22,6 @@ class User(Base, TimestampMixin):
     __tablename__ = "users"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    uuid = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
     email = Column(Unicode(255), nullable=False, unique=True)
     password = Column(Unicode(255), nullable=False)
     username = Column(Unicode(255), nullable=False, unique=True)

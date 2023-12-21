@@ -6,9 +6,7 @@ class TenantResponse(BaseModel):
     description: str = Field(
         ..., description="Tenant description", example="Tenant 1 description"
     )
-    uuid: UUID4 = Field(
-        ..., description="Tenant UUID", example="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
-    )
+    id: int = Field(..., description="Tenant id", example=1)
 
     class Config:
         from_attributes = True

@@ -23,11 +23,11 @@ class TenantController(BaseController[Tenant]):
 
     async def add(self, title: str, description: str, user_id: int) -> Tenant:
         """
-        Adds a task.
+        Adds a tenant.
 
         :param title: The task title.
         :param description: The task description.
-        :param user: The user to associate the tenant to.
+        :param user_id: The user id to associate the tenant to.
         :return: The task.
         """
 

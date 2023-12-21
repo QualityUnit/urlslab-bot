@@ -26,7 +26,6 @@ class Tenant(Base, TimestampMixin):
     __tablename__ = "tenants"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    uuid = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
     title = Column(String(255), nullable=False)
     description = Column(String(255), nullable=False)
 

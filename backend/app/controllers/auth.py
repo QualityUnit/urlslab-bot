@@ -35,7 +35,6 @@ class AuthController(BaseController[User]):
                 "email": email,
                 "password": password,
                 "username": username,
-                "uuid": uuid4(),
             }
         )
 
