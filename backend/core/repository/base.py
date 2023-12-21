@@ -13,8 +13,8 @@ ModelType = TypeVar("ModelType", bound=Base)
 class BaseRepository(Generic[ModelType]):
     """Base class for data repositories."""
 
-    def __init__(self, model: Type[ModelType], db_session: AsyncSession):
-        self.session = db_session
+    def __init__(self, model: Type[ModelType], session_factory):
+        self.session_factory = session_factory
         self.model_class: Type[ModelType] = model
 
     async def create(self, attributes: dict[str, Any] = None) -> ModelType:
@@ -24,11 +24,14 @@ class BaseRepository(Generic[ModelType]):
         :param attributes: The attributes to create the model with.
         :return: The created model instance.
         """
-        if attributes is None:
-            attributes = {}
-        model = self.model_class(**attributes)
-        self.session.add(model)
-        return model
+
+        async with self.session_factory() as session:
+            if attributes is None:
+                attributes = {}
+            model = self.model_class(**attributes)
+            session.add(model)
+            await session.commit()
+            return model
 
     async def get_all(
             self, skip: int = 0, limit: int = 100, join_: set[str] | None = None
@@ -81,7 +84,8 @@ class BaseRepository(Generic[ModelType]):
         :param model: The model to delete.
         :return: None
         """
-        await self.session.delete(model)
+        async with self.session_factory() as session:
+            await session.delete(model)
 
     def _query(
             self,
@@ -108,12 +112,14 @@ class BaseRepository(Generic[ModelType]):
         :param query: The query to execute.
         :return: A list of model instances.
         """
-        query = await self.session.scalars(query)
-        return query.all()
+        async with self.session_factory() as session:
+            query = await session.scalars(query)
+            return query.all()
 
     async def _all_unique(self, query: Select) -> list[ModelType]:
-        result = await self.session.execute(query)
-        return result.unique().scalars().all()
+        async with self.session_factory() as session:
+            result = await session.execute(query)
+            return result.unique().scalars().all()
 
     async def _first(self, query: Select) -> ModelType | None:
         """
@@ -122,13 +128,15 @@ class BaseRepository(Generic[ModelType]):
         :param query: The query to execute.
         :return: The first model instance.
         """
-        query = await self.session.scalars(query)
-        return query.first()
+        async with self.session_factory() as session:
+            query = await session.scalars(query)
+            return query.first()
 
     async def _one_or_none(self, query: Select) -> ModelType | None:
         """Returns the first result from the query or None."""
-        query = await self.session.scalars(query)
-        return query.one_or_none()
+        async with self.session_factory() as session:
+            query = await session.scalars(query)
+            return query.one_or_none()
 
     async def _one(self, query: Select) -> ModelType:
         """
@@ -137,8 +145,9 @@ class BaseRepository(Generic[ModelType]):
         :param query: The query to execute.
         :return: The first model instance.
         """
-        query = await self.session.scalars(query)
-        return query.one()
+        async with self.session_factory() as session:
+            query = await session.scalars(query)
+            return query.first()
 
     async def _count(self, query: Select) -> int:
         """
@@ -146,9 +155,10 @@ class BaseRepository(Generic[ModelType]):
 
         :param query: The query to execute.
         """
-        query = query.subquery()
-        query = self.session.scalars(select(func.count()).select_from(query))
-        return await query.one()
+        async with self.session_factory() as session:
+            query = query.subquery()
+            query = session.scalars(select(func.count()).select_from(query))
+            return await query.one()
 
     def _sort_by(
             self,

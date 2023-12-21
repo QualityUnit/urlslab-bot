@@ -26,7 +26,7 @@ class User(Base, TimestampMixin):
     email = Column(Unicode(255), nullable=False, unique=True)
     password = Column(Unicode(255), nullable=False)
     username = Column(Unicode(255), nullable=False, unique=True)
-    tenants = relationship('Tenant', back_populates="user")
+    tenants = relationship('Tenant', backref='user')
 
     def __acl__(self):
         basic_permissions = [UserPermission.READ, UserPermission.CREATE]

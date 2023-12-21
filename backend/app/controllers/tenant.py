@@ -1,7 +1,7 @@
-from backend.app.models import Tenant
+
+from backend.app.models import Tenant, User
 from backend.app.repositories import TenantRepository
 from backend.core.controller import BaseController
-from backend.core.database.transactional import Transactional, Propagation
 
 
 class TenantController(BaseController[Tenant]):
@@ -21,14 +21,13 @@ class TenantController(BaseController[Tenant]):
 
         return await self.tenant_repository.get_by_user_id(user_id)
 
-    @Transactional(propagation=Propagation.REQUIRED)
     async def add(self, title: str, description: str, user_id: int) -> Tenant:
         """
         Adds a task.
 
         :param title: The task title.
         :param description: The task description.
-        :param user_id: The user id.
+        :param user: The user to associate the tenant to.
         :return: The task.
         """
 

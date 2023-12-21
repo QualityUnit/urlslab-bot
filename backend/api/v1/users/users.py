@@ -1,6 +1,7 @@
 from typing import Callable
 
 from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.controllers import AuthController, UserController
 from backend.app.models.user import User, UserPermission
@@ -10,7 +11,6 @@ from backend.app.schemas.responses.users import UserResponse
 from backend.core.factory import Factory
 from backend.core.fastapi.dependencies import AuthenticationRequired
 from backend.core.fastapi.dependencies.current_user import get_current_user
-from backend.core.fastapi.dependencies.permissions import Permissions
 
 user_router = APIRouter()
 

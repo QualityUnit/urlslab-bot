@@ -5,7 +5,7 @@ from fastapi import Depends
 from backend.app.controllers import AuthController, UserController, TenantController
 from backend.app.models import User, Tenant
 from backend.app.repositories import UserRepository, TenantRepository
-from backend.core.database import get_session
+from backend.core.database.session import SessionLocal
 
 
 class Factory:
@@ -18,17 +18,17 @@ class Factory:
     user_repository = partial(UserRepository, User)
     tenant_repository = partial(TenantRepository, Tenant)
 
-    def get_user_controller(self, db_session=Depends(get_session)):
+    def get_user_controller(self):
         return UserController(
-            user_repository=self.user_repository(db_session=db_session)
+            user_repository=self.user_repository(session_factory=SessionLocal)
         )
 
-    def get_auth_controller(self, db_session=Depends(get_session)):
+    def get_auth_controller(self):
         return AuthController(
-            user_repository=self.user_repository(db_session=db_session),
+            user_repository=self.user_repository(session_factory=SessionLocal),
         )
 
-    def get_tenant_controller(self, db_session=Depends(get_session)):
+    def get_tenant_controller(self):
         return TenantController(
-            tenant_repository=self.tenant_repository(db_session=db_session)
+            tenant_repository=self.tenant_repository(session_factory=SessionLocal)
         )

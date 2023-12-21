@@ -1,6 +1,6 @@
 from contextvars import ContextVar, Token
 
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import Session, declarative_base
 
 from backend.core.config import config
@@ -21,20 +21,6 @@ def reset_session_context(context: Token) -> None:
 
 
 engine = create_async_engine(config.MARIADB_URL, pool_recycle=3600, echo=True)
-session: AsyncSession = AsyncSession(engine)
-
-
-async def get_session():
-    """
-    Get the database session.
-    This can be used for dependency injection.
-
-    :return: The database session.
-    """
-    try:
-        yield session
-    finally:
-        await session.close()
-
+SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 Base = declarative_base()

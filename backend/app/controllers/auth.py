@@ -6,7 +6,6 @@ from backend.app.models import User
 from backend.app.repositories import UserRepository
 from backend.app.schemas.extras.token import Token
 from backend.core.controller import BaseController
-from backend.core.database.transactional import Propagation, Transactional
 from backend.core.exceptions import BadRequestException, UnauthorizedException
 from backend.core.security import JWTHandler, PasswordHandler
 
@@ -16,7 +15,6 @@ class AuthController(BaseController[User]):
         super().__init__(model=User, repository=user_repository)
         self.user_repository = user_repository
 
-    @Transactional(propagation=Propagation.REQUIRED)
     async def register(self, email: EmailStr, password: str, username: str) -> User:
         # Check if user exists with email
         user = await self.user_repository.get_by_email(email)

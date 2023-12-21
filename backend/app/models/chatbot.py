@@ -34,7 +34,6 @@ class Chatbot(Base, TimestampMixin):
     tenant_id = Column(
         BigInteger, ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False
     )
-    tenant = relationship('Tenant', back_populates="chatbots")
 
     __mapper_args__ = {"eager_defaults": True}
 

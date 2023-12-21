@@ -34,10 +34,9 @@ class Tenant(Base, TimestampMixin):
     user_id = Column(
         BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
-    user = relationship('User', back_populates="tenants")
 
     # Chatbots relation
-    chatbots = relationship('Chatbot', back_populates="tenant")
+    chatbots = relationship('Chatbot', backref="tenant")
 
     def __acl__(self):
         basic_permissions = [TenantPermission.CREATE]
@@ -50,6 +49,6 @@ class Tenant(Base, TimestampMixin):
 
         return [
             (Allow, Authenticated, basic_permissions),
-            (Allow, UserPrincipal(self.user.id), self_permissions),
+            (Allow, UserPrincipal(self.user_id), self_permissions),
             (Allow, RolePrincipal("admin"), all_permissions),
         ]
