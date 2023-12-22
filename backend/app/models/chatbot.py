@@ -15,13 +15,6 @@ from backend.core.security.access_control import (
 )
 
 
-class ChatbotPermission(Enum):
-    CREATE = "create"
-    READ = "read"
-    EDIT = "edit"
-    DELETE = "delete"
-
-
 class Chatbot(Base, TimestampMixin):
     __tablename__ = "chatbots"
 

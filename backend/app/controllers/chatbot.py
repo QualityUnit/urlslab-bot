@@ -5,10 +5,9 @@ from backend.core.controller import BaseController
 
 class ChatbotController(BaseController[Chatbot]):
 
-    def __init__(self, chatbot_repository: ChatbotRepository, tenant_repository: TenantRepository):
+    def __init__(self, chatbot_repository: ChatbotRepository):
         super().__init__(model=Chatbot, repository=chatbot_repository)
         self.chatbot_repository = chatbot_repository
-        self.tenant_repository = tenant_repository
 
     async def get_by_tenant_id(self, tenant_id: int) -> list[Chatbot]:
         """

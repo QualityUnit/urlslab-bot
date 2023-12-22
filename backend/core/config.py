@@ -1,6 +1,5 @@
 import os
 
-from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,6 +13,8 @@ class Config(BaseSettings):
     JWT_EXPIRE_MINUTES: int = 60 * 24
     SECRET_KEY: str = "super-secret-key"
     MARIADB_URL: str = "mariadb+pymysql://user:password@127.0.0.1:5432/urlslab-bot"
+    QDRANT_URL: str = "http://localhost:6333"
+    REDIS_URL: str = "redis://localhost:6379"
 
 
 class DevelopmentConfig(Config):
