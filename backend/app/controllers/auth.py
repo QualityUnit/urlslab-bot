@@ -3,7 +3,9 @@ from uuid import uuid4
 from pydantic import EmailStr
 
 from backend.app.models import User
+from backend.app.models.aimodel import AIModel
 from backend.app.repositories import UserRepository
+from backend.app.repositories.aimodels import SettingsRepository
 from backend.app.schemas.extras.token import Token
 from backend.core.controller import BaseController
 from backend.core.exceptions import BadRequestException, UnauthorizedException
@@ -11,9 +13,10 @@ from backend.core.security import JWTHandler, PasswordHandler
 
 
 class AuthController(BaseController[User]):
-    def __init__(self, user_repository: UserRepository):
+    def __init__(self, user_repository: UserRepository, settings_repository: SettingsRepository):
         super().__init__(model=User, repository=user_repository)
         self.user_repository = user_repository
+        self.settings_repository = settings_repository
 
     async def register(self, email: EmailStr, password: str, username: str) -> User:
         # Check if user exists with email
@@ -30,13 +33,18 @@ class AuthController(BaseController[User]):
 
         password = PasswordHandler.hash(password)
 
-        return await self.user_repository.create(
+        user = await self.user_repository.create(
             {
                 "email": email,
                 "password": password,
                 "username": username,
             }
         )
+
+        # Creating default ai models
+        self.settings_repository.upsert(user.id, AIModel.default())
+
+        return user
 
     async def login(self, email: EmailStr, password: str) -> Token:
         user = await self.user_repository.get_by_email(email)

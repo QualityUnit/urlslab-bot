@@ -3,11 +3,11 @@ from functools import partial
 from fastapi import Depends
 
 from backend.app.controllers import AuthController, UserController, TenantController, ChatbotController
-from backend.app.controllers.aimodels import AIModelController
+from backend.app.controllers.aimodels import SettingsController
 from backend.app.controllers.document import DocumentController
 from backend.app.models import User, Tenant, Chatbot
 from backend.app.repositories import UserRepository, TenantRepository, ChatbotRepository
-from backend.app.repositories.aimodels import AIModelRepository
+from backend.app.repositories.aimodels import SettingsRepository
 from backend.app.repositories.document import DocumentRepository
 from backend.core.database import qdrant_client
 from backend.core.database.redis_client import redis_client
@@ -25,7 +25,7 @@ class Factory:
     tenant_repository = partial(TenantRepository, Tenant)
     chatbot_repository = partial(ChatbotRepository, Chatbot)
     document_repository = partial(DocumentRepository)
-    ai_model_repository = partial(AIModelRepository)
+    settings_repository = partial(SettingsRepository)
 
     def get_user_controller(self):
         return UserController(
@@ -35,6 +35,7 @@ class Factory:
     def get_auth_controller(self):
         return AuthController(
             user_repository=self.user_repository(session_factory=SessionLocal),
+            settings_repository=self.settings_repository(redis_client=redis_client)
         )
 
     def get_tenant_controller(self):
@@ -51,4 +52,4 @@ class Factory:
         return DocumentController(document_repository=self.document_repository(qdrant_client=qdrant_client))
 
     def get_ai_model_controller(self):
-        return AIModelController(ai_model_repository=self.ai_model_repository(redis_client=redis_client))
+        return SettingsController(settings_repository=self.settings_repository(redis_client=redis_client))

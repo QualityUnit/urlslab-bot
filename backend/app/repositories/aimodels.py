@@ -2,10 +2,10 @@ import json
 from redis import Redis
 from backend.app.models.aimodel import AIModel
 
-AI_MODEL_KEY_PREFIX = "ai_model_"
+AI_MODEL_KEY_PREFIX = "urlslab_bot_ai_model_"
 
 
-class AIModelRepository:
+class SettingsRepository:
     def __init__(self, redis_client: Redis):
         self.redis_client = redis_client
 
