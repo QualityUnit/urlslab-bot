@@ -2,5 +2,5 @@ from pydantic import BaseModel, Field
 
 
 class AIModelCreate(BaseModel):
-    llm_model_class: str
-    llm_model_name: str
+    chat_model_class: str
+    chat_model_name: str

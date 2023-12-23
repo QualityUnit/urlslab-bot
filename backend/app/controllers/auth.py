@@ -6,6 +6,7 @@ from backend.app.models import User
 from backend.app.models.aimodel import AIModel
 from backend.app.repositories import UserRepository
 from backend.app.repositories.aimodels import SettingsRepository
+from backend.app.repositories.document import DocumentRepository
 from backend.app.schemas.extras.token import Token
 from backend.core.controller import BaseController
 from backend.core.exceptions import BadRequestException, UnauthorizedException
@@ -13,10 +14,14 @@ from backend.core.security import JWTHandler, PasswordHandler
 
 
 class AuthController(BaseController[User]):
-    def __init__(self, user_repository: UserRepository, settings_repository: SettingsRepository):
+    def __init__(self,
+                 user_repository: UserRepository,
+                 settings_repository: SettingsRepository,
+                 document_repository: DocumentRepository):
         super().__init__(model=User, repository=user_repository)
         self.user_repository = user_repository
         self.settings_repository = settings_repository
+        self.document_repository = document_repository
 
     async def register(self, email: EmailStr, password: str, username: str) -> User:
         # Check if user exists with email
@@ -42,7 +47,11 @@ class AuthController(BaseController[User]):
         )
 
         # Creating default ai models
-        self.settings_repository.upsert(user.id, AIModel.default())
+        user_ai_model = AIModel.default()
+        self.settings_repository.upsert(user.id, user_ai_model)
+
+        # Creating Index in Vector Database
+        await self.document_repository.create_document_index(user.id, user_ai_model)
 
         return user
 

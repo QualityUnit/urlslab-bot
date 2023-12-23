@@ -22,6 +22,6 @@ def upsert_ai_model(
         ai_model_create: AIModelCreate,
         ai_model_controller: SettingsController = Depends(Factory().get_ai_model_controller),
 ) -> AIModelResponse:
-    return ai_model_controller.upsert(ai_model_create.llm_model_class,
-                                      ai_model_create.llm_model_name,
+    return ai_model_controller.upsert(ai_model_create.chat_model_class,
+                                      ai_model_create.chat_model_name,
                                       request.user.id)
