@@ -25,3 +25,14 @@ class TenantRepository(BaseRepository[Tenant]):
             return await self._all_unique(query)
 
         return await self._all(query)
+
+    async def get_by_id(self, tenant_id: int) -> Tenant:
+        """
+        Get tenant by id.
+
+        :param tenant_id: The tenant id to match.
+        :return: A tenant.
+        """
+        query = self._query()
+        query = self._get_by(query, "id", tenant_id)
+        return await self._first(query)

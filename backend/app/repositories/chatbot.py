@@ -28,6 +28,17 @@ class ChatbotRepository(BaseRepository[Chatbot]):
 
         return await self._all(query)
 
+    async def get_by_id(self, chatbot_id: int) -> Chatbot:
+        """
+        Get chatbot by id.
+
+        :param chatbot_id: The chatbot id to match.
+        :return: A chatbot.
+        """
+        query = self._query()
+        query = self._get_by(query, "id", chatbot_id)
+        return await self._first(query)
+
     def _join_tenant(self, query: Select) -> Select:
         """
         Join the author relationship.
