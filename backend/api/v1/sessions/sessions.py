@@ -50,5 +50,9 @@ async def delete_session(
         request: Request,
         session_controller: SessionController = Depends(Factory().get_session_controller),
 ) -> Completed:
+    try:
+        UUID(session_id)
+    except ValueError:
+        raise BadRequestException("Invalid session id")
     session_controller.delete_session(request.user.id, UUID(session_id))
     return Completed(status="success")
