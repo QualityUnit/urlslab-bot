@@ -8,6 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10.0, <3.12"
+python-multipart = "^0.0.6"
 pydantic = { version = "^2.5.2", extras = ["email"] }
 pydantic-settings = "^2.1.0"
 fastapi = "^0.105.0"
@@ -26,3 +27,5 @@ pylint = "^3.0.3"
 alembic = "^1.13.0"
 redis = "^5.0.1"
 fastembed = "^0.1.2" # Default Embedding FastEmbed
+PyPDF2= "^3.0.1"
+python-docx = "^1.1.0"

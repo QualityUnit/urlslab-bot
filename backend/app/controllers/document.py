@@ -1,6 +1,8 @@
 import uuid
 from uuid import UUID
 
+from fastapi import UploadFile, File
+
 from backend.app.models.aimodel import UrlslabEmbeddingModel
 from backend.app.models.document import UrlslabDocument, join_document_chunks
 from backend.app.repositories.aimodels import SettingsRepository
@@ -8,6 +10,8 @@ from backend.app.repositories.document import DocumentRepository
 from backend.app.schemas.requests.document import DocumentUpsert
 from backend.app.schemas.responses.documents import DocumentResponse
 from backend.core.exceptions import BadRequestException, NotFoundException
+from backend.core.exceptions.base import UnsupportedMediaType
+from backend.core.utils.document_reader import get_content_reader
 from backend.core.utils.document_splitter import UrlslabDocumentSplitter
 
 
@@ -39,6 +43,27 @@ class DocumentController:
         rsp = await self.upsert(user_id, tenant_id, [documents_upsert])
         return self._convert_docs_to_response(rsp, merge=True)
 
+    async def upsert_file(self, user_id: int, tenant_id: int, file: UploadFile = File(...), source_override: str = None):
+        # Check if the file format is valid (PDF or DOCX)
+        if file.content_type not in ["application/pdf",
+                                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
+            raise UnsupportedMediaType("Unsupported file type: must be a PDF or a DOCX")
+
+        file_content = await file.read()
+        parsed_content = get_content_reader(file_content, file.content_type).read()
+        document_upsert = DocumentUpsert(
+            document_title=file.filename,
+            document_id=file.filename,
+            document_content=parsed_content,
+            document_source=file.filename if source_override is None else source_override,
+        )
+
+        response = await self.upsert_single(user_id,
+                                            tenant_id,
+                                            document_upsert)
+
+        return response
+
     async def upsert_bulk(self, user_id: int, tenant_id: int, documents_upsert: list[DocumentUpsert]):
         rsp = await self.upsert(user_id, tenant_id, documents_upsert)
         return self._convert_docs_to_response(rsp)
@@ -55,14 +80,14 @@ class DocumentController:
         # Add document ID to the documents with no ID
         for doc in docs:
             if doc.document_id is None:
-                doc.document_id = uuid.uuid4()
+                doc.document_id = str(uuid.uuid4())
 
         # start inserting the document
         user_ai_model = self.settings_repository.get_by_id(user_id)
         split_docs = await self._split_and_vectorize_doc(docs, user_ai_model.embedding_model)
         return await self.document_repository.upsert(user_id, tenant_id, split_docs)
 
-    async def delete_by_id(self, user_id: int, tenant_id: int, document_id: UUID):
+    async def delete_by_id(self, user_id: int, tenant_id: int, document_id: str):
         await self.document_repository.delete_by_id(user_id, tenant_id, [document_id])
 
     @staticmethod

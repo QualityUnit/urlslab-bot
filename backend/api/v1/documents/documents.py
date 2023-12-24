@@ -1,7 +1,7 @@
 from typing import Callable
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, UploadFile, File, Form
 
 from backend.app.controllers import TenantController
 from backend.app.controllers.document import DocumentController
@@ -63,6 +63,26 @@ async def upsert_document(
                                                    document_upsert)
 
 
+@document_router.post("/upload/{tenant_id}", response_model=DocumentResponse)
+async def upload_document_file(
+        tenant_id: int,
+        request: Request,
+        file: UploadFile = File(...),  # PDF or DOCX file
+        source: str = Form(None),  # Extra data field
+        document_controller: DocumentController = Depends(Factory().get_document_controller),
+        tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
+        assert_access: Callable = Depends(Permissions(TenantPermission.CREATE)),
+) -> DocumentResponse:
+    tenant = await tenant_controller.get_by_id(tenant_id)
+    assert_access(tenant)
+    response = await document_controller.upsert_file(request.user.id,
+                                                     tenant_id,
+                                                     file,
+                                                     source)
+
+    return response
+
+
 @document_router.post("/upsert/bulk/{tenant_id}", response_model=list[DocumentResponse])
 async def upsert_documents(
         tenant_id: int,
@@ -92,5 +112,5 @@ async def delete_document(
     tenant = await tenant_controller.get_by_id(tenant_id)
     assert_access(tenant)
 
-    await document_controller.delete_by_id(request.user.id, tenant_id, UUID(document_id))
+    await document_controller.delete_by_id(request.user.id, tenant_id, document_id)
     return Completed(status="success")

@@ -89,7 +89,7 @@ class DocumentRepository:
         )
         return documents
 
-    async def delete_by_id(self, user_id: int, tenant_id: int, document_ids: list[UUID]):
+    async def delete_by_id(self, user_id: int, tenant_id: int, document_ids: list[str]):
         """
         Deletes the document
         :return: None
@@ -106,7 +106,7 @@ class DocumentRepository:
                 should=[
                     models.FieldCondition(
                         key='document_id',
-                        match=models.MatchValue(value=str(document_id))
+                        match=models.MatchValue(value=document_id)
                     ) for document_id in document_ids
                 ]
             )
@@ -167,7 +167,7 @@ class DocumentRepository:
             returning_model.append(
                 UrlslabDocument(
                     point_id=document.id,
-                    document_id=UUID(document.payload["document_id"]),
+                    document_id=document.payload["document_id"],
                     title=document.payload["title"],
                     content=document.payload["content"],
                     source=document.payload["source"],

@@ -5,7 +5,7 @@ from uuid import UUID
 
 class UrlslabDocument:
     def __init__(self,
-                 document_id: UUID,
+                 document_id: str,
                  title: str,
                  content: str,
                  source: str,

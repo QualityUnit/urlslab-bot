@@ -41,6 +41,12 @@ class UnprocessableEntity(CustomException):
     message = HTTPStatus.UNPROCESSABLE_ENTITY.description
 
 
+class UnsupportedMediaType(CustomException):
+    code = HTTPStatus.UNSUPPORTED_MEDIA_TYPE
+    error_code = HTTPStatus.UNSUPPORTED_MEDIA_TYPE
+    message = HTTPStatus.UNSUPPORTED_MEDIA_TYPE.description
+
+
 class DuplicateValueException(CustomException):
     code = HTTPStatus.UNPROCESSABLE_ENTITY
     error_code = HTTPStatus.UNPROCESSABLE_ENTITY
