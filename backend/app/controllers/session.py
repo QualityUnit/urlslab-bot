@@ -1,14 +1,17 @@
 import datetime
+import typing
 import uuid
 from uuid import UUID
 
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 
 from backend.app.models import ChatSession
 from backend.app.repositories import TenantRepository, ChatbotRepository
 from backend.app.repositories.aimodels import SettingsRepository
 from backend.app.repositories.session import SessionRepository
+from backend.app.schemas.requests.chat import ChatCompletionRequest
 from backend.app.schemas.responses.session import SessionResponse
+from backend.core.chains import DefaultChainFactory
 from backend.core.exceptions import NotFoundException
 
 
@@ -24,8 +27,25 @@ class SessionController:
         self.settings_repository = settings_repository
 
     def stream_chatbot_response(self,
-                                session_id: UUID):
-        pass
+                                user_id: int,
+                                session_id: UUID,
+                                chat_completion_request: ChatCompletionRequest) -> typing.AsyncIterable[str]:
+        session = self.session_repository.get_by_id(session_id=session_id)
+        if session is None:
+            raise NotFoundException("Session not found")
+
+        if session.user_id != user_id:
+            raise NotFoundException("Session not found")
+
+        # update history and update ttl
+        session.message_history.append(HumanMessage(content=chat_completion_request.human_input))
+        self.session_repository.add(session=session)
+
+        # creating chain
+        chain = DefaultChainFactory(session=session).create_chain()
+
+        for chunk in chain.stream({"human_input": chat_completion_request.human_input}):
+            yield chunk
 
     async def create_session(self,
                              user_id: int,

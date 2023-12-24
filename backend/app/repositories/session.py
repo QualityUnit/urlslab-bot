@@ -27,8 +27,5 @@ class SessionRepository:
         )
         return session
 
-    def renew_ttl(self, session_id: UUID, ttl=300):
-        self.redis_client.expire(f"{SESSION_KEY_PREFIX}{str(session_id)}", ttl, gt=True)
-
     def delete(self, session_id: UUID):
         self.redis_client.delete(f"{SESSION_KEY_PREFIX}{str(session_id)}")
