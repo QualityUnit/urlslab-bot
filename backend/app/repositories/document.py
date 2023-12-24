@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 from uuid import UUID
 
@@ -28,16 +29,12 @@ class DocumentRepository:
             scroll_filter=models.Filter(
                 must=[
                     models.FieldCondition(
-                        key="user_id",
-                        match=models.MatchValue(value=user_id),
-                    ),
-                    models.FieldCondition(
                         key="tenant_id",
                         match=models.MatchValue(value=tenant_id),
                     ),
                     models.FieldCondition(
                         key="document_id",
-                        match=models.MatchValue(value=document_id),
+                        match=models.MatchValue(value=str(document_id)),
                     ),
                 ]
             ),
@@ -54,10 +51,6 @@ class DocumentRepository:
             collection_name=_collection_name(user_id),
             scroll_filter=models.Filter(
                 must=[
-                    models.FieldCondition(
-                        key="user_id",
-                        match=models.MatchValue(value=user_id),
-                    ),
                     models.FieldCondition(
                         key="tenant_id",
                         match=models.MatchValue(value=tenant_id),
@@ -80,15 +73,16 @@ class DocumentRepository:
             collection_name=_collection_name(user_id),
             points=[
                 models.PointStruct(
-                    payload=Payload(
-                        tenant_id=tenant_id,
-                        document_id=str(doc.document_id),
-                        title=doc.title,
-                        content=doc.content,
-                        source=doc.source,
-                        chunk_id=doc.chunk_id,
-                        updated_at=doc.updated_at,
-                    ),
+                    id=str(uuid.uuid4()),
+                    payload={
+                        "tenant_id": tenant_id,
+                        "document_id": str(doc.document_id),
+                        "title": doc.title,
+                        "content": doc.content,
+                        "source": doc.source,
+                        "chunk_id": doc.chunk_id,
+                        "updated_at": doc.updated_at,
+                    },
                     vector=doc.vector,
                 ) for doc in documents
             ]
@@ -179,7 +173,6 @@ class DocumentRepository:
                     source=document.payload["source"],
                     tenant_id=document.payload["tenant_id"],
                     chunk_id=document.payload["chunk_id"],
-                    created_at=document.payload["created_at"],
                     updated_at=document.payload["updated_at"],
                     vector=document.vector,
                 )

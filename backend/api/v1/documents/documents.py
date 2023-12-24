@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Request
 from backend.app.controllers import TenantController
 from backend.app.controllers.document import DocumentController
 from backend.app.models.tenant import TenantPermission
+from backend.app.schemas.extras.completed import Completed
 from backend.app.schemas.requests.document import DocumentUpsert
 from backend.app.schemas.responses.documents import DocumentResponse
 from backend.core.factory import Factory
@@ -28,7 +29,7 @@ async def get_document(
 
     return await document_controller.get_by_id(request.user.id,
                                                tenant_id,
-                                               UUID(document_id))
+                                               document_id)
 
 
 @document_router.get("/{tenant_id}", response_model=list[DocumentResponse])
@@ -57,9 +58,9 @@ async def upsert_document(
     tenant = await tenant_controller.get_by_id(tenant_id)
     assert_access(tenant)
 
-    return await document_controller.upsert(request.user.id,
-                                            tenant_id,
-                                            [document_upsert])
+    return await document_controller.upsert_single(request.user.id,
+                                                   tenant_id,
+                                                   document_upsert)
 
 
 @document_router.post("/upsert/bulk/{tenant_id}", response_model=list[DocumentResponse])
@@ -74,12 +75,12 @@ async def upsert_documents(
     tenant = await tenant_controller.get_by_id(tenant_id)
     assert_access(tenant)
 
-    return await document_controller.upsert(request.user.id,
-                                            tenant_id,
-                                            document_upsert)
+    return await document_controller.upsert_bulk(request.user.id,
+                                                 tenant_id,
+                                                 document_upsert)
 
 
-@document_router.delete("/{tenant_id}/{document_id}", response_model=DocumentResponse)
+@document_router.delete("/{tenant_id}/{document_id}", response_model=Completed)
 async def delete_document(
         tenant_id: int,
         request: Request,
@@ -87,8 +88,9 @@ async def delete_document(
         document_controller: DocumentController = Depends(Factory().get_document_controller),
         tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
         assert_access: Callable = Depends(Permissions(TenantPermission.READ)),
-) -> DocumentResponse:
+) -> Completed:
     tenant = await tenant_controller.get_by_id(tenant_id)
     assert_access(tenant)
 
-    return await document_controller.delete_by_id(request.user.id, tenant_id, UUID(document_id))
+    await document_controller.delete_by_id(request.user.id, tenant_id, UUID(document_id))
+    return Completed(status="success")

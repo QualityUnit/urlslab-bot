@@ -9,8 +9,7 @@ from backend.app.models import User, Tenant, Chatbot
 from backend.app.repositories import UserRepository, TenantRepository, ChatbotRepository
 from backend.app.repositories.aimodels import SettingsRepository
 from backend.app.repositories.document import DocumentRepository
-from backend.core.database import qdrant_client
-from backend.core.database.redis_client import redis_client
+from backend.core.database import qdrant_client, redis_client
 from backend.core.database.session import SessionLocal
 
 
@@ -35,7 +34,8 @@ class Factory:
     def get_auth_controller(self):
         return AuthController(
             user_repository=self.user_repository(session_factory=SessionLocal),
-            settings_repository=self.settings_repository(redis_client=redis_client)
+            settings_repository=self.settings_repository(redis_client=redis_client),
+            document_repository=self.document_repository(qdrant_client=qdrant_client)
         )
 
     def get_tenant_controller(self):
@@ -49,7 +49,8 @@ class Factory:
         )
 
     def get_document_controller(self):
-        return DocumentController(document_repository=self.document_repository(qdrant_client=qdrant_client))
+        return DocumentController(document_repository=self.document_repository(qdrant_client=qdrant_client),
+                                  settings_repository=self.settings_repository(redis_client=redis_client))
 
     def get_ai_model_controller(self):
         return SettingsController(settings_repository=self.settings_repository(redis_client=redis_client))

@@ -20,7 +20,7 @@ class AIModel:
             chat_model_name="gpt-3.5-turbo"
         )
 
-    def __dict__(self):
+    def to_dict(self):
         return {
             "embedding_model_class": self.embedding_model.embedding_model_class,
             "embedding_model_name": self.embedding_model.embedding_model_name,

@@ -11,7 +11,7 @@ class SettingsController:
         rsp = self.settings_repository.get_by_id(user_id)
         if rsp is None:
             return NotFoundException("AI Model not found")
-        return AIModelResponse(**rsp.__dict__)
+        return AIModelResponse(**rsp.to_dict())
 
     def upsert(self, llm_model_class: str, llm_model_name: str, user_id: int) -> AIModelResponse:
         aimodel = self.settings_repository.get_by_id(user_id)
@@ -19,6 +19,6 @@ class SettingsController:
         aimodel.chat_model_name = llm_model_name
 
         self.settings_repository.upsert(user_id, aimodel)
-        return AIModelResponse(**aimodel.__dict__)
+        return AIModelResponse(**aimodel.to_dict())
 
 

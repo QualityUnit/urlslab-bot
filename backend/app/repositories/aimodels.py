@@ -16,4 +16,4 @@ class SettingsRepository:
         return AIModel(**json.loads(ai_model))
 
     def upsert(self, user_id: int, ai_model: AIModel):
-        self.redis_client.set(f"{AI_MODEL_KEY_PREFIX}{user_id}", json.dumps(ai_model.__dict__))
+        self.redis_client.set(f"{AI_MODEL_KEY_PREFIX}{user_id}", json.dumps(ai_model.to_dict()))

@@ -22,7 +22,7 @@ class UrlslabDocument:
         self.chunk_id = chunk_id
         self.vector = kwargs.get('vector') or None
         self.score = kwargs.get('score') or None
-        self.updated_at = kwargs.get('updated_at') or datetime.datetime.now()
+        self.updated_at = kwargs.get('updated_at') or datetime.datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
 
     def copy_as_partial_doc(self, partial_content: str, chunk_id: int):
         """
@@ -43,6 +43,20 @@ class UrlslabDocument:
             score=None,
             updated_at=self.updated_at,
         )
+
+    def to_dict(self):
+        return {
+            "point_id": self.point_id,
+            "document_id": self.document_id,
+            "title": self.title,
+            "content": self.content,
+            "source": self.source,
+            "tenant_id": self.tenant_id,
+            "chunk_id": self.chunk_id,
+            "vector": self.vector,
+            "score": self.score,
+            "updated_at": self.updated_at,
+        }
 
 
 def join_document_chunks(docs: list[UrlslabDocument]):
