@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Union
 from uuid import UUID
 
 from qdrant_client import AsyncQdrantClient, models
@@ -60,6 +60,31 @@ class DocumentRepository:
             limit=50,
         )
         return self._convert_qdrant_docs_to_urlslab_docs(documents[0])
+
+    async def search_by_tenant_id(self,
+                                  user_id: int,
+                                  tenant_id: int,
+                                  query_vector: list[float],
+                                  **kwargs) -> List[UrlslabDocument]:
+        """
+        Gets all documents by tenant id
+        :return: UrlslabDocument The document to be returned related to tenant_id
+        """
+        documents = await self.qdrant_client.search(
+            collection_name=_collection_name(user_id),
+            query_vector=query_vector,
+            query_filter=models.Filter(
+                must=[
+                    models.FieldCondition(
+                        key="tenant_id",
+                        match=models.MatchValue(value=tenant_id),
+                    ),
+                ]
+            ),
+            score_threshold=kwargs.get("score_threshold", 0.5),
+            limit=10,
+        )
+        return self._convert_qdrant_docs_to_urlslab_docs(documents)
 
     async def upsert(self,
                      user_id: int,
@@ -161,7 +186,7 @@ class DocumentRepository:
         )
 
     @staticmethod
-    def _convert_qdrant_docs_to_urlslab_docs(qdrant_docs: List[Record]):
+    def _convert_qdrant_docs_to_urlslab_docs(qdrant_docs: Union[List[models.Record], List[models.ScoredPoint]]):
         returning_model = []
         for document in qdrant_docs:
             returning_model.append(

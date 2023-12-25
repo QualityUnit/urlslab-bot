@@ -3,11 +3,15 @@ import typing
 import uuid
 from uuid import UUID
 
-from langchain_core.messages import SystemMessage, HumanMessage
+from fastapi.openapi.models import Response
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.tracers import ConsoleCallbackHandler
+from starlette.responses import StreamingResponse
 
 from backend.app.models import ChatSession
 from backend.app.repositories import TenantRepository, ChatbotRepository
 from backend.app.repositories.aimodels import SettingsRepository
+from backend.app.repositories.document import DocumentRepository
 from backend.app.repositories.session import SessionRepository
 from backend.app.schemas.requests.chat import ChatCompletionRequest
 from backend.app.schemas.responses.session import SessionResponse
@@ -15,13 +19,21 @@ from backend.core.chains import DefaultChainFactory
 from backend.core.exceptions import NotFoundException
 
 
+def _get_default_config():
+    return {
+        'callbacks': [ConsoleCallbackHandler()],
+    }
+
+
 class SessionController:
     def __init__(self,
                  session_repository: SessionRepository,
+                 document_repository: DocumentRepository,
                  tenant_repository: TenantRepository,
                  chatbot_repository: ChatbotRepository,
                  settings_repository: SettingsRepository):
         self.session_repository = session_repository
+        self.document_repository = document_repository
         self.tenant_repository = tenant_repository
         self.chatbot_repository = chatbot_repository
         self.settings_repository = settings_repository
@@ -29,7 +41,7 @@ class SessionController:
     def stream_chatbot_response(self,
                                 user_id: int,
                                 session_id: UUID,
-                                chat_completion_request: ChatCompletionRequest) -> typing.AsyncIterable[str]:
+                                chat_completion_request: ChatCompletionRequest) -> StreamingResponse:
         session = self.session_repository.get_by_id(session_id=session_id)
         if session is None:
             raise NotFoundException("Session not found")
@@ -37,15 +49,39 @@ class SessionController:
         if session.user_id != user_id:
             raise NotFoundException("Session not found")
 
+        return StreamingResponse(
+            self._stream_chatbot_response(user_id, session, chat_completion_request),
+            media_type="text/event-stream")
+
+    async def _stream_chatbot_response(self,
+                                       user_id: int,
+                                       session: ChatSession,
+                                       chat_completion_request: ChatCompletionRequest) -> typing.AsyncIterable[str]:
+        # creating chain
+        chain = DefaultChainFactory(document_repository=self.document_repository,
+                                    session=session,
+                                    user_id=user_id).create_chain()
+
+        # chain created - updating session message history
         # update history and update ttl
         session.message_history.append(HumanMessage(content=chat_completion_request.human_input))
         self.session_repository.add(session=session)
 
-        # creating chain
-        chain = DefaultChainFactory(session=session).create_chain()
-
-        for chunk in chain.stream({"human_input": chat_completion_request.human_input}):
+        ai_response = ""
+        async for chunk in chain.astream(
+                {"human_input": chat_completion_request.human_input},
+                config=_get_default_config()
+        ):
+            ai_response += chunk
             yield chunk
+
+        # chain finished - updating session message history
+        # update history and update ttl
+        session.message_history.append(AIMessage(content=ai_response))
+        self.session_repository.add(session=session)
+
+        # saving sources used
+        # TODO: save sources from chain.sources
 
     async def create_session(self,
                              user_id: int,

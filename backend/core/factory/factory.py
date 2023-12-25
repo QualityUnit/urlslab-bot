@@ -60,6 +60,7 @@ class Factory:
 
     def get_session_controller(self):
         return SessionController(session_repository=self.session_repository(redis_client=redis_client),
+                                 document_repository=self.document_repository(qdrant_client=qdrant_client),
                                  tenant_repository=self.tenant_repository(session_factory=SessionLocal),
                                  chatbot_repository=self.chatbot_repository(session_factory=SessionLocal),
                                  settings_repository=self.settings_repository(redis_client=redis_client))

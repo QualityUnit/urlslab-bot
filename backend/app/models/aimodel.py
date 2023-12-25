@@ -61,6 +61,9 @@ class UrlslabEmbeddingModel:
     async def aembed_query(self, query: str):
         return await self.langchain_model.aembed_query(query)
 
+    async def aembed_documents(self, documents: list[str]):
+        return await self.langchain_model.aembed_documents(documents)
+
 
 class UrlslabChatModel:
     def __init__(self,

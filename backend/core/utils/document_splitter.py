@@ -1,7 +1,7 @@
 import tiktoken
 from langchain.text_splitter import TokenTextSplitter
 
-from backend.app.models.aimodel import AIModel
+from backend.app.models.aimodel import UrlslabEmbeddingModel
 from backend.app.models.document import UrlslabDocument
 
 
@@ -35,4 +35,12 @@ class UrlslabDocumentSplitter:
         text_chunks = TokenTextSplitter.from_tiktoken_encoder(chunk_size=chunk_size,
                                                               chunk_overlap=chunk_overlap).split_text(document)
         return text_chunks
+
+    @staticmethod
+    async def vectorize_text(text: str, embedding_model: UrlslabEmbeddingModel):
+        chunk_size = embedding_model.embedding_dimensions()
+        chunk_overlap = 0
+        text_chunks = TokenTextSplitter.from_tiktoken_encoder(chunk_size=chunk_size,
+                                                              chunk_overlap=chunk_overlap).split_text(text)
+        return await embedding_model.aembed_query(text_chunks[0])
 

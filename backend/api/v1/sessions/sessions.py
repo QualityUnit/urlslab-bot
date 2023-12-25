@@ -2,7 +2,7 @@ from typing import Callable
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Request
-from starlette.responses import StreamingResponse
+from starlette.responses import StreamingResponse, Response
 
 from backend.app.controllers import TenantController
 from backend.app.controllers.session import SessionController
@@ -19,21 +19,19 @@ from backend.core.fastapi.dependencies.permissions import Permissions
 session_router = APIRouter()
 
 
-@session_router.post("/{session_id}/stream", response_model=list[TenantResponse])
+@session_router.post("/{session_id}/stream")
 async def stream_chatbot_response(
         session_id: str,
         request: Request,
         chat_completion_request: ChatCompletionRequest,
         session_controller: SessionController = Depends(Factory().get_session_controller),
-) -> StreamingResponse:
+) -> Response:
     try:
         UUID(session_id)
     except ValueError:
         raise BadRequestException("Invalid session id")
 
-    return StreamingResponse(
-        session_controller.stream_chatbot_response(request.user.id, UUID(session_id), chat_completion_request),
-        media_type="text/event-stream")
+    return session_controller.stream_chatbot_response(request.user.id, UUID(session_id), chat_completion_request)
 
 
 @session_router.put("/{tenant_id}/{chatbot_id}", response_model=SessionResponse, status_code=201)

@@ -1,6 +1,7 @@
 import os
 from typing import Optional
 
+from langchain.globals import set_verbose
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -20,6 +21,9 @@ class Config(BaseSettings):
 
 class DevelopmentConfig(Config):
     model_config = SettingsConfigDict(env_file='.env.dev', env_file_encoding='utf-8')
+
+    # Setting verbose for langchain
+    set_verbose(True)
 
 
 class ProductionConfig(Config):
