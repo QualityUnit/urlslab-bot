@@ -9,9 +9,9 @@ from backend.app.controllers.session import SessionController
 from backend.app.models.tenant import TenantPermission
 from backend.app.schemas.extras.completed import Completed
 from backend.app.schemas.requests.chat import ChatCompletionRequest
+from backend.app.schemas.responses.documents import DocumentSource
 
 from backend.app.schemas.responses.session import SessionResponse
-from backend.app.schemas.responses.tenants import TenantResponse
 from backend.core.exceptions import BadRequestException
 from backend.core.factory import Factory
 from backend.core.fastapi.dependencies.permissions import Permissions
@@ -32,6 +32,20 @@ async def stream_chatbot_response(
         raise BadRequestException("Invalid session id")
 
     return session_controller.stream_chatbot_response(request.user.id, UUID(session_id), chat_completion_request)
+
+
+@session_router.get("/{session_id}/sources")
+def get_session_last_source(
+        session_id: str,
+        request: Request,
+        session_controller: SessionController = Depends(Factory().get_session_controller),
+) -> DocumentSource:
+    try:
+        UUID(session_id)
+    except ValueError:
+        raise BadRequestException("Invalid session id")
+
+    return session_controller.get_session_last_source(request.user.id, UUID(session_id))
 
 
 @session_router.put("/{tenant_id}/{chatbot_id}", response_model=SessionResponse, status_code=201)

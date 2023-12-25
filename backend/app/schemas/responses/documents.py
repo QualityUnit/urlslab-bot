@@ -16,3 +16,8 @@ class DocumentResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+class DocumentSource(BaseModel):
+    source: str = Field(..., description="Document source", example="document source")
+    title: str = Field(..., description="The title of the document", example="document title")
+

@@ -14,6 +14,7 @@ from backend.app.repositories.aimodels import SettingsRepository
 from backend.app.repositories.document import DocumentRepository
 from backend.app.repositories.session import SessionRepository
 from backend.app.schemas.requests.chat import ChatCompletionRequest
+from backend.app.schemas.responses.documents import DocumentResponse
 from backend.app.schemas.responses.session import SessionResponse
 from backend.core.chains import DefaultChainFactory
 from backend.core.exceptions import NotFoundException
@@ -81,7 +82,22 @@ class SessionController:
         self.session_repository.add(session=session)
 
         # saving sources used
-        # TODO: save sources from chain.sources
+        self.session_repository.set_session_sources(session_id=session.session_id,
+                                                    sources=chain.sources)
+
+    def get_session_last_source(self, user_id: int, session_id: UUID):
+        session = self.session_repository.get_by_id(session_id=session_id)
+        if session is None:
+            raise NotFoundException("Session not found")
+
+        if session.user_id != user_id:
+            raise NotFoundException("Session not found")
+
+        sources = self.session_repository.get_session_sources(session_id=session.session_id)
+        if sources is None:
+            return []
+
+        return [DocumentResponse(**source) for source in sources]
 
     async def create_session(self,
                              user_id: int,

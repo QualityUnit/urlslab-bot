@@ -34,14 +34,14 @@ class DefaultChainFactory(BaseUrlslabChainFactory):
 
         # all needed components are created - creating chain
         return (
-            {
-                "context": itemgetter("human_input") | RunnableLambda(self._retrieve_documents),
-                "human_input": RunnablePassthrough(),
-                "history": history_prompt,
-            }
-            | prompt
-            | model
-            | StrOutputParser()
+                {
+                    "context": itemgetter("human_input") | RunnableLambda(self._retrieve_documents),
+                    "human_input": RunnablePassthrough(),
+                    "history": history_prompt,
+                }
+                | prompt
+                | model
+                | StrOutputParser()
         )
 
     async def _retrieve_documents(self, query: str):
@@ -56,6 +56,6 @@ class DefaultChainFactory(BaseUrlslabChainFactory):
             context += doc.content + " "
 
         # save the sources
-        self.sources = [doc.document_id for doc in documents]
+        self.sources = [{'source': doc.source, 'title': doc.title} for doc in documents]
 
         return context
