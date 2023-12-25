@@ -107,6 +107,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+!chatbot-ui/lib/
 lib64/
 parts/
 sdist/
