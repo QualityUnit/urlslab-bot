@@ -8,6 +8,7 @@ from backend.app.repositories import UserRepository
 from backend.app.repositories.aimodels import SettingsRepository
 from backend.app.repositories.document import DocumentRepository
 from backend.app.schemas.extras.token import Token
+from backend.app.schemas.responses.users import LoginResponse, UserResponse
 from backend.core.controller import BaseController
 from backend.core.exceptions import BadRequestException, UnauthorizedException
 from backend.core.security import JWTHandler, PasswordHandler
@@ -55,7 +56,7 @@ class AuthController(BaseController[User]):
 
         return user
 
-    async def login(self, email: EmailStr, password: str) -> Token:
+    async def login(self, email: EmailStr, password: str) -> LoginResponse:
         user = await self.user_repository.get_by_email(email)
 
         if not user:
@@ -64,9 +65,14 @@ class AuthController(BaseController[User]):
         if not PasswordHandler.verify(user.password, password):
             raise BadRequestException("Invalid credentials")
 
-        return Token(
+        token = Token(
             access_token=JWTHandler.encode(payload={"user_id": user.id}),
             refresh_token=JWTHandler.encode(payload={"sub": "refresh_token"}),
+        )
+
+        return LoginResponse(
+            token=token,
+            user=UserResponse(**user.__dict__),
         )
 
     def refresh_token(self, access_token: str, refresh_token: str) -> Token:

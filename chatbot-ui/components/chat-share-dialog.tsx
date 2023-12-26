@@ -22,13 +22,11 @@ import { useCopyToClipboard } from '@/lib/hooks/use-copy-to-clipboard'
 
 interface ChatShareDialogProps extends DialogProps {
   chat: Pick<Chat, 'id' | 'title' | 'messages'>
-  shareChat: (id: string) => ServerActionResult<Chat>
   onCopy: () => void
 }
 
 export function ChatShareDialog({
   chat,
-  shareChat,
   onCopy,
   ...props
 }: ChatShareDialogProps) {
@@ -77,31 +75,7 @@ export function ChatShareDialog({
           </div>
         </div>
         <DialogFooter className="items-center">
-          <Button
-            disabled={isSharePending}
-            onClick={() => {
-              // @ts-ignore
-              startShareTransition(async () => {
-                const result = await shareChat(chat.id)
-
-                if (result && 'error' in result) {
-                  toast.error(result.error)
-                  return
-                }
-
-                copyShareLink(result)
-              })
-            }}
-          >
-            {isSharePending ? (
-              <>
-                <IconSpinner className="mr-2 animate-spin" />
-                Copying...
-              </>
-            ) : (
-              <>Copy link</>
-            )}
-          </Button>
+          <Button>A button I replaced</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

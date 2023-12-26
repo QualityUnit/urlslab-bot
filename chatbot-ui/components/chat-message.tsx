@@ -73,7 +73,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         >
           {message.content}
         </MemoizedReactMarkdown>
-        <ChatMessageActions message={message} />
+        <ChatMessageActions message="Dummy string" />
       </div>
     </div>
   )

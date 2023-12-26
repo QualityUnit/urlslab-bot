@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth'
+import NextAuth, {DefaultSession} from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthService } from '@/lib/urlslab-api'
 
@@ -6,7 +6,8 @@ declare module 'next-auth' {
   interface Session {
     user: {
       /** The user's id. */
-      id: string
+      username: string
+      email: string
     } & DefaultSession['user']
   }
 }
@@ -14,43 +15,44 @@ declare module 'next-auth' {
 export const {
   handlers: { GET, POST },
   auth
-} =  NextAuth({
+} = NextAuth({
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: {  label: "Password", type: "password" }
-      },
-      authorize: async (credentials) => {
+      async authorize(credentials, request) {
         const authService = new AuthService();
-
-        console.log(credentials)
-
-        if (credentials) {
-          // Use authService to authenticate the user
-          const token = await authService.loginUser({
+        const tokenResponse = await authService.loginUser({
             email: credentials.email,
             password: credentials.password
-          })
+        });
 
-          if (token) {
-            // Any user object returned here will be saved in the JWT
-            // The user object should be returned with an `id` field
-            return { id: 'user-id', email: credentials.email }
-          }
+        // Assuming your `AuthService` returns a `tokenResponse` which includes a user `id`.
+        if (tokenResponse && tokenResponse.user.username && tokenResponse.user.email) {
+          // Return a user object with the required `id` property
+          return { username: tokenResponse.user.username, email: tokenResponse.user.email };
+        } else {
+          // If authentication fails, return null
+          return null;
         }
-        // If you return null or false then the credentials will be rejected
-        return null;
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
-    session: async ({ session, user }) => {
-      if (session.user) {
-        session.user.id = user.id; // Assign the id from user object to the session
+    jwt: async ({ token, user }) => {
+      if (user) {
+        // Store only the user `id` in the token
+        token.email = user.email;
+      }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      if (token.email) {
+        // Store only the user `id` in the session
+        session.user = { username: '', email: token.email };
       }
       return session;
     },
   },
-})
+  pages: {
+    signIn: "/sign-in", // If you have a custom login page
+  },
+});

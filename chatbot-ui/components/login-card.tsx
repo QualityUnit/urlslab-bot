@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -11,10 +13,26 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {signIn} from "next-auth/react";
 
-export function LoginCard(onSubmit: (email: string, password: string) => Promise<void>) {
-  const [email, setEmail] = React.useState("")
-    const [password, setPassword] = React.useState("")
+export function LoginCard() {
+  //   const handleSubmit = async (e) => {
+  //   // Call the signIn function from next-auth
+  //   // The credentials type should match with the CredentialsProvider configuration
+  //   const res = await signIn('credentials', {
+  //     redirect: false,
+  //     email,
+  //     password,
+  //   });
+  //
+  //   if (res?.ok) {
+  //     // Redirect to some page upon successful sign-in
+  //     window.location.href = '/';
+  //   } else {
+  //     // Handle errors, e.g., show an error message.
+  //     console.error('Sign-in failed: ', res?.error);
+  //   }
+  // };
 
   return (
     <Card className="w-[600px]">
@@ -38,7 +56,7 @@ export function LoginCard(onSubmit: (email: string, password: string) => Promise
           <p className="mt-5 text-sm text-muted-foreground">No account? contact admin of your organization.</p>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button onClick={() => onSubmit(email, password)}>Sign In</Button>
+        <Button onClick={() => {console.log("clicked")}}>Sign In</Button>
       </CardFooter>
     </Card>
   )

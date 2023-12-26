@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { type UseChatHelpers } from 'ai/react'
 
-import { shareChat } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { PromptForm } from '@/components/prompt-form'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
@@ -71,11 +70,10 @@ export function ChatPanel({
                       open={shareDialogOpen}
                       onOpenChange={setShareDialogOpen}
                       onCopy={() => setShareDialogOpen(false)}
-                      shareChat={shareChat}
                       chat={{
                         id,
                         title,
-                        messages
+                        messages: []
                       }}
                     />
                   </>

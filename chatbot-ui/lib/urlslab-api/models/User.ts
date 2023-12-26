@@ -14,6 +14,11 @@ interface LoginUserRequest {
   password: string;
 }
 
+interface LoginResponse {
+  token: TokenResponse;
+  user: UserResponse;
+}
+
 interface TokenResponse {
   access_token: string;
   refresh_token: string;

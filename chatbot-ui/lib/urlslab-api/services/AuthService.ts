@@ -12,12 +12,12 @@ export class AuthService {
     }
   }
 
-  public async loginUser(requestData: LoginUserRequest): Promise<TokenResponse> {
+  public async loginUser(requestData: LoginUserRequest): Promise<LoginResponse> {
     try {
-      const response: AxiosResponse<TokenResponse> = await axiosInstance.post('/v1/users/login', requestData);
-      const { access_token, refresh_token } = response.data;
-      this.setAuthToken(access_token);
-      return { access_token, refresh_token };
+      const response: AxiosResponse<LoginResponse> = await axiosInstance.post('/v1/users/login', requestData);
+      const { token, user } = response.data;
+      this.setAuthToken(token.access_token);
+      return { token, user };
     } catch (error: any) {
       throw this.handleValidationError(error);
     }

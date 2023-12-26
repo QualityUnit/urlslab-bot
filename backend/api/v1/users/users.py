@@ -7,7 +7,7 @@ from backend.app.controllers import AuthController, UserController
 from backend.app.models.user import User, UserPermission
 from backend.app.schemas.extras.token import Token
 from backend.app.schemas.requests.users import LoginUserRequest, RegisterUserRequest
-from backend.app.schemas.responses.users import UserResponse
+from backend.app.schemas.responses.users import UserResponse, LoginResponse
 from backend.core.factory import Factory
 from backend.core.fastapi.dependencies import AuthenticationRequired
 from backend.core.fastapi.dependencies.current_user import get_current_user
@@ -31,7 +31,7 @@ async def register_user(
 async def login_user(
     login_user_request: LoginUserRequest,
     auth_controller: AuthController = Depends(Factory().get_auth_controller),
-) -> Token:
+) -> LoginResponse:
     return await auth_controller.login(
         email=login_user_request.email, password=login_user_request.password
     )
