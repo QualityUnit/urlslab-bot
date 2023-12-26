@@ -1,6 +1,8 @@
 import NextAuth, {DefaultSession} from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { AuthService } from '@/lib/urlslab-api'
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client"
 
 declare module 'next-auth' {
   interface Session {
@@ -12,12 +14,21 @@ declare module 'next-auth' {
   }
 }
 
+
+const prisma = new PrismaClient()
+
 export const {
   handlers: { GET, POST },
   auth
 } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+      username: { label: "Username", type: "text", placeholder: "username" },
+      password: { label: "Password", type: "password" }
+    },
       async authorize(credentials, request) {
         const authService = new AuthService();
         const tokenResponse = await authService.loginUser({

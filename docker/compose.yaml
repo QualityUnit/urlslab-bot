@@ -14,7 +14,7 @@ services:
       - 23306:3306/tcp
     volumes:
       - ./mariadb:/var/lib/mysql
-      - ./sqldir:/docker-entrypoint-initdb.d
+      - ./init-mariadb.sql:/docker-entrypoint-initdb.d/init-mariadb.sql
     command:
       --wait_timeout=28800
       --character-set-server=utf8
