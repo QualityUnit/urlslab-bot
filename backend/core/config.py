@@ -17,6 +17,7 @@ class Config(BaseSettings):
     MARIADB_URL: str = "mariadb+pymysql://user:password@127.0.0.1:5432/urlslab-bot"
     QDRANT_URL: str = "http://localhost:6333"
     REDIS_URL: str = "redis://localhost:6379"
+    API_KEY: str
 
 
 class DevelopmentConfig(Config):

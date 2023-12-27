@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Security
 
 from backend.app.controllers.aimodels import SettingsController
 from backend.app.schemas.requests.aimodel import AIModelCreate

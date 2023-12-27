@@ -1,7 +1,8 @@
-from fastapi import Depends, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import status, Security
+from fastapi.security import APIKeyHeader
 
-from backend.core.exceptions.base import CustomException
+from backend.core.config import config
+from backend.core.exceptions.base import CustomException, ForbiddenException
 
 
 class AuthenticationRequiredException(CustomException):
@@ -13,7 +14,10 @@ class AuthenticationRequiredException(CustomException):
 class AuthenticationRequired:
     def __init__(
         self,
-        token: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
+        api_key: str = Security(APIKeyHeader(name="X-API-Key")),
     ):
-        if not token:
+        if not api_key:
             raise AuthenticationRequiredException()
+
+        if api_key != config.API_KEY:
+            raise ForbiddenException("Invalid API Key")

@@ -109,7 +109,10 @@ class SessionController:
             raise NotFoundException("Tenant not found")
 
         # retrieving chatbot
-        chatbot = await self.chatbot_repository.get_by_id(chatbot_id=chatbot_id)
+        chatbot = await self.chatbot_repository.get_by_id_and_tenant_id(
+            tenant_id= tenant_id,
+            chatbot_id=chatbot_id
+        )
         if chatbot is None:
             raise NotFoundException("Chatbot not found")
 

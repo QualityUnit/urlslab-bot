@@ -1,12 +1,9 @@
-from typing import Callable
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Request
-from starlette.responses import StreamingResponse, Response
+from fastapi import APIRouter, Depends, Request, Security
+from starlette.responses import Response
 
-from backend.app.controllers import TenantController
 from backend.app.controllers.session import SessionController
-from backend.app.models.tenant import TenantPermission
 from backend.app.schemas.extras.completed import Completed
 from backend.app.schemas.requests.chat import ChatCompletionRequest
 from backend.app.schemas.responses.documents import DocumentSource
@@ -14,7 +11,6 @@ from backend.app.schemas.responses.documents import DocumentSource
 from backend.app.schemas.responses.session import SessionResponse
 from backend.core.exceptions import BadRequestException
 from backend.core.factory import Factory
-from backend.core.fastapi.dependencies.permissions import Permissions
 
 session_router = APIRouter()
 
@@ -54,12 +50,7 @@ async def create_session(
         chatbot_id: int,
         request: Request,
         session_controller: SessionController = Depends(Factory().get_session_controller),
-        tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
-        assert_access: Callable = Depends(Permissions(TenantPermission.READ)),
 ) -> SessionResponse:
-    tenant = await tenant_controller.get_by_id(tenant_id)
-    assert_access(tenant)
-
     return await session_controller.create_session(request.user.id, tenant_id, chatbot_id)
 
 

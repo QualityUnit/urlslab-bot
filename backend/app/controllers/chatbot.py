@@ -17,6 +17,15 @@ class ChatbotController(BaseController[Chatbot]):
         """
         return await self.chatbot_repository.get_by_tenant_id(tenant_id=tenant_id)
 
+    async def get_by_id_and_tenant_id(self, tenant_id: int, chatbot_id: int) -> Chatbot:
+        """
+        Returns a chatbot based on tenant_id and chatbot_id.
+        :param tenant_id: the tenant id, the chatbot belongs to
+        :param chatbot_id: the chatbot id
+        :return: the chatbot
+        """
+        return await self.chatbot_repository.get_by_id(tenant_id=tenant_id, chatbot_id=chatbot_id)
+
     async def add(self, title: str, tenant_id: int, system_prompt: str) -> Chatbot:
         """
         Adds a Chatbot
