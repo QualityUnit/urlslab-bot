@@ -1,11 +1,14 @@
-import { auth } from '@/auth'
+"use client";
+
 import { redirect } from 'next/navigation'
 import {LoginCard} from "@/components/login-card";
+import {useSession} from "next-auth/react";
 
-export default async function SignInPage() {
-  const session = await auth()
+export default function SignInPage() {
+  const { data } = useSession()
+
   // redirect to home if user is already logged in
-  if (session?.user) {
+  if (data?.user) {
     redirect('/')
   }
 

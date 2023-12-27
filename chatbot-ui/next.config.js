@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-   logging: {
+  logging: {
     fetches: {
       fullUrl: true,
     },
   },
-};
+}

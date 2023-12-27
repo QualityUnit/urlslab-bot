@@ -1,9 +1,11 @@
+// @ts-nocheck
+
 import { type Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
-import { auth } from '@/auth'
 import { getChat } from '@/app/actions'
 import { Chat } from '@/components/chat'
+import {useSession} from "next-auth/react";
 
 export interface ChatPageProps {
   params: {
@@ -11,10 +13,11 @@ export interface ChatPageProps {
   }
 }
 
+// @ts-nocheck
 export async function generateMetadata({
   params
 }: ChatPageProps): Promise<Metadata> {
-  const session = await auth()
+  const session = useSession()
 
   if (!session?.user) {
     return {}
@@ -27,7 +30,7 @@ export async function generateMetadata({
 }
 
 export default async function ChatPage({ params }: ChatPageProps) {
-  const session = await auth()
+  const session = useSession()
 
   console.log("session", session)
 

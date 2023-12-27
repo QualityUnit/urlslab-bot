@@ -16,23 +16,28 @@ import { Label } from "@/components/ui/label"
 import {signIn} from "next-auth/react";
 
 export function LoginCard() {
-  //   const handleSubmit = async (e) => {
-  //   // Call the signIn function from next-auth
-  //   // The credentials type should match with the CredentialsProvider configuration
-  //   const res = await signIn('credentials', {
-  //     redirect: false,
-  //     email,
-  //     password,
-  //   });
-  //
-  //   if (res?.ok) {
-  //     // Redirect to some page upon successful sign-in
-  //     window.location.href = '/';
-  //   } else {
-  //     // Handle errors, e.g., show an error message.
-  //     console.error('Sign-in failed: ', res?.error);
-  //   }
-  // };
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const handleSubmit = async () => {
+    // Call the signIn function from next-auth
+    // The credentials type should match with the CredentialsProvider configuration
+    const res = await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+    });
+
+    console.log(res);
+
+    if (res?.ok) {
+      // Redirect to some page upon successful sign-in
+      window.location.href = '/';
+    } else {
+      // Handle errors, e.g., show an error message.
+      console.error('Sign-in failed: ', res?.error);
+    }
+  };
 
   return (
     <Card className="w-[600px]">
@@ -45,18 +50,18 @@ export function LoginCard() {
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="Your Email"/>
+              <Input id="email" placeholder="Your Email" onChange={(e) => setEmail(e.target.value)}/>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" placeholder="Your Password"/>
+              <Input id="password" type="password" placeholder="Your Password" onChange={(e) => setPassword(e.target.value)}/>
             </div>
           </div>
         </form>
           <p className="mt-5 text-sm text-muted-foreground">No account? contact admin of your organization.</p>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button onClick={() => {console.log("clicked")}}>Sign In</Button>
+        <Button onClick={handleSubmit}>Sign In</Button>
       </CardFooter>
     </Card>
   )

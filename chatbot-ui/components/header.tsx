@@ -1,7 +1,7 @@
+// @ts-nocheck
 import * as React from 'react'
 import Link from 'next/link'
 
-import { auth } from '@/auth'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Icons } from "@/components/icons"
 import {
@@ -15,9 +15,10 @@ import { SidebarToggle } from './sidebar-toggle'
 import { ChatHistory } from './chat-history'
 import {MainNav} from "@/components/main-nav";
 import {siteConfig} from "@/config/site";
+import {useSession} from "next-auth/react";
 
 async function UserOrLogin() {
-  const session = await auth()
+  const session = useSession()
   return (
     <>
       {session?.user ? (

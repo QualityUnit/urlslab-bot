@@ -1,5 +1,5 @@
+// @ts-nocheck
 'use client'
-
 import * as React from 'react'
 import Link from 'next/link'
 import { type DialogProps } from '@radix-ui/react-dialog'
@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dialog'
 import { IconSpinner } from '@/components/ui/icons'
 import { useCopyToClipboard } from '@/lib/hooks/use-copy-to-clipboard'
+
 
 interface ChatShareDialogProps extends DialogProps {
   chat: Pick<Chat, 'id' | 'title' | 'messages'>
