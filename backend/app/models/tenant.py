@@ -29,25 +29,5 @@ class Tenant(Base, TimestampMixin):
     title = Column(String(255), nullable=False)
     description = Column(String(255), nullable=False)
 
-    # Users relation
-    user_id = Column(
-        BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
-    )
-
     # Chatbots relation
     chatbots = relationship('Chatbot', backref="tenant")
-
-    def __acl__(self):
-        basic_permissions = [TenantPermission.CREATE]
-        self_permissions = [
-            TenantPermission.READ,
-            TenantPermission.EDIT,
-            TenantPermission.DELETE,
-        ]
-        all_permissions = list(TenantPermission)
-
-        return [
-            (Allow, Authenticated, basic_permissions),
-            (Allow, UserPrincipal(self.user_id), self_permissions),
-            (Allow, RolePrincipal("admin"), all_permissions),
-        ]

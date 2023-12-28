@@ -2,33 +2,6 @@ import langchain.chat_models
 import langchain.embeddings
 
 
-class AIModel:
-    def __init__(self,
-                 embedding_model_class: str,
-                 embedding_model_name: str,
-                 chat_model_class: str,
-                 chat_model_name: str):
-        self.embedding_model = UrlslabEmbeddingModel(embedding_model_class, embedding_model_name)
-        self.chat_model = UrlslabChatModel(chat_model_class, chat_model_name)
-
-    @classmethod
-    def default(cls):
-        return cls(
-            embedding_model_class="FastEmbedEmbeddings",
-            embedding_model_name="BAAI/bge-small-en",
-            chat_model_class="ChatOpenAI",
-            chat_model_name="gpt-3.5-turbo"
-        )
-
-    def to_dict(self):
-        return {
-            "embedding_model_class": self.embedding_model.embedding_model_class,
-            "embedding_model_name": self.embedding_model.embedding_model_name,
-            "chat_model_class": self.chat_model.chat_model_class,
-            "chat_model_name": self.chat_model.chat_model_name
-        }
-
-
 class UrlslabEmbeddingModel:
     def __init__(self,
                  embedding_model_class: str,
@@ -45,6 +18,19 @@ class UrlslabEmbeddingModel:
             self.dimension_size = None
         else:
             raise ValueError(f"Embedding model {embedding_model_class} is not supported")
+
+    @classmethod
+    def default(cls):
+        return cls(
+            embedding_model_class="FastEmbedEmbeddings",
+            embedding_model_name="BAAI/bge-small-en",
+        )
+
+    def to_dict(self):
+        return {
+            "embedding_model_class": self.embedding_model_class,
+            "embedding_model_name": self.embedding_model_name,
+        }
 
     async def aembedding_dimensions(self):
         if self.dimension_size is None:
@@ -80,4 +66,17 @@ class UrlslabChatModel:
             self.chat_model_name = chat_model_name
         else:
             raise ValueError(f"Chat model {chat_model_class} is not supported")
+
+    @classmethod
+    def default(cls):
+        return cls(
+            chat_model_class="ChatOpenAI",
+            chat_model_name="gpt-3.5-turbo"
+        )
+
+    def to_dict(self):
+        return {
+            "chat_model_class": self.chat_model_class,
+            "chat_model_name": self.chat_model_name
+        }
 

@@ -7,7 +7,6 @@ from .aimodels import ai_model_router
 settings_router = APIRouter()
 settings_router.include_router(
     ai_model_router,
-    prefix="/ai-models",
     tags=["Settings"],
     dependencies=[Depends(AuthenticationRequired)],
 )

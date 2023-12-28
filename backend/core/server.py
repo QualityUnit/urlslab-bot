@@ -14,6 +14,7 @@ from backend.core.fastapi.middlewares import (
     AuthenticationMiddleware,
     SQLAlchemyMiddleware,
 )
+from backend.core.utils.version_manager import VersionManager
 
 
 def on_auth_error(request: Request, exc: Exception):
@@ -62,6 +63,10 @@ def make_middleware() -> List[Middleware]:
 
 
 def create_app() -> FastAPI:
+    # update steps and init
+    version_manager = VersionManager()
+    version_manager.setup()
+
     app_ = FastAPI(
         title="URLsLab Bot",
         description="URLsLab Bot for chatbot",

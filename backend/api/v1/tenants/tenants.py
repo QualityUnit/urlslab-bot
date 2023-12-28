@@ -14,7 +14,7 @@ async def get_tenants(
     request: Request,
     tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
 ) -> list[TenantResponse]:
-    tenants = await tenant_controller.get_by_user_id(request.user.id)
+    tenants = await tenant_controller.get_all(request.user.id)
     return tenants
 
 
@@ -27,7 +27,6 @@ async def create_tenant(
     task = await tenant_controller.add(
         title=tenant_create.title,
         description=tenant_create.description,
-        user_id=request.user.id,
     )
     return task
 

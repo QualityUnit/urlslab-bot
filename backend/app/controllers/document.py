@@ -21,7 +21,6 @@ class DocumentController:
         self.settings_repository = settings_repository
 
     async def get_by_id(self,
-                        user_id: int,
                         tenant_id: int,
                         document_id: str):
         try:
@@ -29,21 +28,21 @@ class DocumentController:
         except ValueError:
             raise BadRequestException("Invalid document ID")
 
-        urlslab_docs = await self.document_repository.get_by_id(user_id, tenant_id, document_id)
+        urlslab_docs = await self.document_repository.get_by_id(tenant_id, document_id)
         if len(urlslab_docs) == 0:
             raise NotFoundException("Document not found")
 
         return self._convert_docs_to_response(urlslab_docs, merge=True)
 
-    async def get_by_tenant_id(self, user_id: int, tenant_id: int):
-        urlslab_docs = await self.document_repository.get_by_tenant_id(user_id, tenant_id)
+    async def get_by_tenant_id(self, tenant_id: int):
+        urlslab_docs = await self.document_repository.get_by_tenant_id(tenant_id)
         return self._convert_docs_to_response(urlslab_docs)
 
-    async def upsert_single(self, user_id: int, tenant_id: int, documents_upsert: DocumentUpsert):
-        rsp = await self.upsert(user_id, tenant_id, [documents_upsert])
+    async def upsert_single(self, tenant_id: int, documents_upsert: DocumentUpsert):
+        rsp = await self.upsert(tenant_id, [documents_upsert])
         return self._convert_docs_to_response(rsp, merge=True)
 
-    async def upsert_file(self, user_id: int, tenant_id: int, file: UploadFile = File(...), source_override: str = None):
+    async def upsert_file(self, tenant_id: int, file: UploadFile = File(...), source_override: str = None):
         # Check if the file format is valid (PDF or DOCX)
         if file.content_type not in ["application/pdf",
                                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
@@ -58,23 +57,21 @@ class DocumentController:
             document_source=file.filename if source_override is None else source_override,
         )
 
-        response = await self.upsert_single(user_id,
-                                            tenant_id,
+        response = await self.upsert_single(tenant_id,
                                             document_upsert)
 
         return response
 
-    async def upsert_bulk(self, user_id: int, tenant_id: int, documents_upsert: list[DocumentUpsert]):
-        rsp = await self.upsert(user_id, tenant_id, documents_upsert)
+    async def upsert_bulk(self, tenant_id: int, documents_upsert: list[DocumentUpsert]):
+        rsp = await self.upsert(tenant_id, documents_upsert)
         return self._convert_docs_to_response(rsp)
 
-    async def upsert(self, user_id: int, tenant_id: int, documents_upsert: list[DocumentUpsert]):
+    async def upsert(self, tenant_id: int, documents_upsert: list[DocumentUpsert]):
         docs = self._convert_document_upsert_to_urlslab_document(tenant_id, documents_upsert)
-        doc_ids = set([doc.document_id for doc in docs])
+        doc_ids = set([doc.document_id for doc in filter(lambda doc: doc.document_id is not None, docs)])
         if doc_ids is not None and len(doc_ids) > 0:
             # document ID provided, check if it exists
-            await self.document_repository.delete_by_id(user_id,
-                                                        tenant_id,
+            await self.document_repository.delete_by_id(tenant_id,
                                                         list(doc_ids))
 
         # Add document ID to the documents with no ID
@@ -83,12 +80,12 @@ class DocumentController:
                 doc.document_id = str(uuid.uuid4())
 
         # start inserting the document
-        user_ai_model = self.settings_repository.get_by_id(user_id)
-        split_docs = await self._split_and_vectorize_doc(docs, user_ai_model.embedding_model)
-        return await self.document_repository.upsert(user_id, tenant_id, split_docs)
+        embedding_model = self.settings_repository.get_embedding_model()
+        split_docs = await self._split_and_vectorize_doc(docs, embedding_model)
+        return await self.document_repository.upsert(tenant_id, split_docs)
 
-    async def delete_by_id(self, user_id: int, tenant_id: int, document_id: str):
-        await self.document_repository.delete_by_id(user_id, tenant_id, [document_id])
+    async def delete_by_id(self, tenant_id: int, document_id: str):
+        await self.document_repository.delete_by_id(tenant_id, [document_id])
 
     @staticmethod
     def _convert_document_upsert_to_urlslab_document(tenant_id: int,

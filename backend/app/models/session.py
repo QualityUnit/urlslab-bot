@@ -7,7 +7,7 @@ import langchain_core
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field
 
-from backend.app.models.aimodel import AIModel
+from backend.app.models.aimodel import UrlslabEmbeddingModel, UrlslabChatModel
 
 
 class ChatSession:
@@ -16,7 +16,8 @@ class ChatSession:
                  user_id: int,
                  tenant_id: int,
                  chatbot_id: int,
-                 ai_model_settings: AIModel,
+                 embedding_model: UrlslabEmbeddingModel,
+                 chat_model: UrlslabChatModel,
                  message_history: list[BaseMessage],
                  created_at: datetime,
                  session_id: Optional[UUID] = None):
@@ -24,7 +25,8 @@ class ChatSession:
         self.user_id = user_id
         self.tenant_id = tenant_id
         self.chatbot_id = chatbot_id
-        self.ai_model_settings = ai_model_settings
+        self.embedding_model = embedding_model
+        self.chat_model = chat_model
         self.message_history = message_history
         self.created_at = created_at
 
@@ -34,7 +36,8 @@ class ChatSession:
             "user_id": self.user_id,
             "tenant_id": self.tenant_id,
             "chatbot_id": self.chatbot_id,
-            "ai_model_settings": self.ai_model_settings.to_dict(),
+            "embedding_model": self.embedding_model.to_dict(),
+            "chat_model": self.chat_model.to_dict(),
             "message_history": [self._base_message_to_dict(message) for message in self.message_history],
             "created_at": self.created_at.strftime("%Y-%m-%d, %H:%M:%S")
         }
@@ -46,7 +49,8 @@ class ChatSession:
             user_id=data.get("user_id"),
             tenant_id=data.get("tenant_id"),
             chatbot_id=data.get("chatbot_id"),
-            ai_model_settings=AIModel(**data.get("ai_model_settings")),
+            embedding_model=UrlslabEmbeddingModel(**data.get("embedding_model")),
+            chat_model=UrlslabChatModel(**data.get("chat_model")),
             message_history=[cls._base_message_from_dict(message) for message in data.get("message_history")] or [],
             created_at=datetime.strptime(data.get("created_at"), "%Y-%m-%d, %H:%M:%S")
         )

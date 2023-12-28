@@ -23,7 +23,7 @@ class DefaultChainFactory(BaseUrlslabChainFactory):
         self.sources = []
 
     def create_chain(self) -> Chain:
-        model = self.session.ai_model_settings.chat_model.langchain_model
+        model = self.session.chat_model.langchain_model
         prompt = PromptTemplate.from_template(
             RAG_CHAT_TEMPLATE,
         )
@@ -45,9 +45,8 @@ class DefaultChainFactory(BaseUrlslabChainFactory):
         )
 
     async def _retrieve_documents(self, query: str):
-        query_vector = await self.session.ai_model_settings.embedding_model.aembed_query(query)
-        documents = await self.document_repository.search_by_tenant_id(self.user_id,
-                                                                       self.session.tenant_id,
+        query_vector = await self.session.embedding_model.aembed_query(query)
+        documents = await self.document_repository.search_by_tenant_id(self.session.tenant_id,
                                                                        query_vector,
                                                                        score_threshold=0.8)
 

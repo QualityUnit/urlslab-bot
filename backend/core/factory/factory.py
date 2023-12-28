@@ -1,13 +1,11 @@
 from functools import partial
 
-from fastapi import Depends
-
-from backend.app.controllers import AuthController, UserController, TenantController, ChatbotController
+from backend.app.controllers import TenantController, ChatbotController
 from backend.app.controllers.aimodels import SettingsController
 from backend.app.controllers.document import DocumentController
 from backend.app.controllers.session import SessionController
-from backend.app.models import User, Tenant, Chatbot
-from backend.app.repositories import UserRepository, TenantRepository, ChatbotRepository
+from backend.app.models import Tenant, Chatbot
+from backend.app.repositories import TenantRepository, ChatbotRepository
 from backend.app.repositories.aimodels import SettingsRepository
 from backend.app.repositories.document import DocumentRepository
 from backend.app.repositories.session import SessionRepository
@@ -22,24 +20,11 @@ class Factory:
     """
 
     # Repositories
-    user_repository = partial(UserRepository, User)
     tenant_repository = partial(TenantRepository, Tenant)
     chatbot_repository = partial(ChatbotRepository, Chatbot)
     document_repository = partial(DocumentRepository)
     settings_repository = partial(SettingsRepository)
     session_repository = partial(SessionRepository)
-
-    def get_user_controller(self):
-        return UserController(
-            user_repository=self.user_repository(session_factory=SessionLocal)
-        )
-
-    def get_auth_controller(self):
-        return AuthController(
-            user_repository=self.user_repository(session_factory=SessionLocal),
-            settings_repository=self.settings_repository(redis_client=redis_client),
-            document_repository=self.document_repository(qdrant_client=qdrant_client)
-        )
 
     def get_tenant_controller(self):
         return TenantController(

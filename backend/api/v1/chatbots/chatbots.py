@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, Security
+from fastapi import APIRouter, Depends
 
-from backend.app.controllers import ChatbotController
+from backend.app.controllers import ChatbotController, TenantController
 from backend.app.schemas.requests.chatbot import ChatbotCreate
 from backend.app.schemas.responses.chatbot import ChatbotResponse
 from backend.core.factory import Factory
@@ -11,8 +11,12 @@ chatbot_router = APIRouter()
 @chatbot_router.get("/{tenant_id}", response_model=list[ChatbotResponse])
 async def get_chatbots(
         tenant_id: int,
+        tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
         chatbot_controller: ChatbotController = Depends(Factory().get_chatbot_controller),
 ) -> list[ChatbotResponse]:
+    # 404 if tenant does not exist
+    await tenant_controller.get_by_id(tenant_id)
+
     chatbots = await chatbot_controller.get_by_tenant_id(tenant_id)
     return chatbots
 
@@ -24,7 +28,11 @@ async def create_chatbots(
         chatbot_controller: ChatbotController = Depends(Factory().get_chatbot_controller),
 ) -> ChatbotResponse:
     return await chatbot_controller.add(
-        chatbot_create.title, tenant_id, chatbot_create.system_prompt
+        chatbot_create.title,
+        tenant_id,
+        chatbot_create.system_prompt,
+        chatbot_create.chat_model_class,
+        chatbot_create.chat_model_name,
     )
 
 

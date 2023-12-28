@@ -3,29 +3,23 @@ from typing import List, Union
 from uuid import UUID
 
 from qdrant_client import AsyncQdrantClient, models
-from qdrant_client.http.models import Payload, Record
 
-from backend.app.models.aimodel import AIModel
 from backend.app.models.document import UrlslabDocument
-
-COLLECTION_NAME_PREFIX = "urlslab_bot_user_"
-
-
-def _collection_name(user_id: int) -> str:
-    return f"{COLLECTION_NAME_PREFIX}{user_id}"
+from backend.core.config import config
 
 
 class DocumentRepository:
     def __init__(self, qdrant_client: AsyncQdrantClient):
         self.qdrant_client = qdrant_client
+        self.collection_name = config.QDRANT_COLLECTION_NAME
 
-    async def get_by_id(self, user_id: int, tenant_id: int, document_id: UUID) -> List[UrlslabDocument]:
+    async def get_by_id(self, tenant_id: int, document_id: UUID) -> List[UrlslabDocument]:
         """
         Gets the document by its id
         :return: UrlslabDocument The document to be returned with the given id
         """
         documents = await self.qdrant_client.scroll(
-            collection_name=_collection_name(user_id),
+            collection_name=self.collection_name,
             scroll_filter=models.Filter(
                 must=[
                     models.FieldCondition(
@@ -42,13 +36,13 @@ class DocumentRepository:
         )
         return self._convert_qdrant_docs_to_urlslab_docs(documents[0])
 
-    async def get_by_tenant_id(self, user_id: int, tenant_id: int) -> List[UrlslabDocument]:
+    async def get_by_tenant_id(self, tenant_id: int) -> List[UrlslabDocument]:
         """
         Gets all documents by tenant id
         :return: UrlslabDocument The document to be returned related to tenant_id
         """
         documents = await self.qdrant_client.scroll(
-            collection_name=_collection_name(user_id),
+            collection_name=self.collection_name,
             scroll_filter=models.Filter(
                 must=[
                     models.FieldCondition(
@@ -62,7 +56,6 @@ class DocumentRepository:
         return self._convert_qdrant_docs_to_urlslab_docs(documents[0])
 
     async def search_by_tenant_id(self,
-                                  user_id: int,
                                   tenant_id: int,
                                   query_vector: list[float],
                                   **kwargs) -> List[UrlslabDocument]:
@@ -71,7 +64,7 @@ class DocumentRepository:
         :return: UrlslabDocument The document to be returned related to tenant_id
         """
         documents = await self.qdrant_client.search(
-            collection_name=_collection_name(user_id),
+            collection_name=self.collection_name,
             query_vector=query_vector,
             query_filter=models.Filter(
                 must=[
@@ -87,7 +80,6 @@ class DocumentRepository:
         return self._convert_qdrant_docs_to_urlslab_docs(documents)
 
     async def upsert(self,
-                     user_id: int,
                      tenant_id: int,
                      documents: list[UrlslabDocument]) -> list[UrlslabDocument]:
         """
@@ -95,7 +87,7 @@ class DocumentRepository:
         :return: UrlslabDocument The document to be returned with the given id
         """
         await self.qdrant_client.upsert(
-            collection_name=_collection_name(user_id),
+            collection_name=self.collection_name,
             points=[
                 models.PointStruct(
                     id=str(uuid.uuid4()),
@@ -114,13 +106,13 @@ class DocumentRepository:
         )
         return documents
 
-    async def delete_by_id(self, user_id: int, tenant_id: int, document_ids: list[str]):
+    async def delete_by_id(self, tenant_id: int, document_ids: list[str]):
         """
         Deletes the document
         :return: None
         """
         await self.qdrant_client.delete(
-            collection_name=_collection_name(user_id),
+            collection_name=self.collection_name,
             points_selector=models.Filter(
                 must=[
                     models.FieldCondition(
@@ -135,54 +127,6 @@ class DocumentRepository:
                     ) for document_id in document_ids
                 ]
             )
-        )
-
-    async def create_document_index(self,
-                                    user_id: int,
-                                    user_ai_model: AIModel):
-        dim = user_ai_model.embedding_model.embedding_dimensions()
-        collection_name = _collection_name(user_id)
-        await self.qdrant_client.create_collection(
-            collection_name=collection_name,
-            vectors_config=models.VectorParams(
-                size=dim,
-                distance=models.Distance.COSINE,
-                on_disk=True,
-            ),
-            hnsw_config=models.HnswConfigDiff(
-                payload_m=16,
-                m=0,
-            ),
-            shard_number=3,
-            replication_factor=2
-        )
-
-        # creating index on tenant_id
-        await self.qdrant_client.create_payload_index(
-            collection_name=collection_name,
-            field_name="tenant_id",
-            field_schema=models.PayloadSchemaType.INTEGER,
-        )
-
-        # creating index on document_id
-        await self.qdrant_client.create_payload_index(
-            collection_name=collection_name,
-            field_name="document_id",
-            field_schema=models.PayloadSchemaType.KEYWORD,
-        )
-
-        # creating index for resource source
-        await self.qdrant_client.create_payload_index(
-            collection_name=collection_name,
-            field_name="source",
-            field_schema=models.PayloadSchemaType.TEXT,
-        )
-
-        # creating index for resource title
-        await self.qdrant_client.create_payload_index(
-            collection_name=collection_name,
-            field_name="title",
-            field_schema=models.PayloadSchemaType.TEXT,
         )
 
     @staticmethod

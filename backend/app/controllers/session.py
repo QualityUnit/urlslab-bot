@@ -3,7 +3,6 @@ import typing
 import uuid
 from uuid import UUID
 
-from fastapi.openapi.models import Response
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.tracers import ConsoleCallbackHandler
 from starlette.responses import StreamingResponse
@@ -59,9 +58,10 @@ class SessionController:
                                        session: ChatSession,
                                        chat_completion_request: ChatCompletionRequest) -> typing.AsyncIterable[str]:
         # creating chain
-        chain = DefaultChainFactory(document_repository=self.document_repository,
-                                    session=session,
-                                    user_id=user_id).create_chain()
+        chain_factory = DefaultChainFactory(document_repository=self.document_repository,
+                                            session=session,
+                                            user_id=user_id)
+        chain = chain_factory.create_chain()
 
         # chain created - updating session message history
         # update history and update ttl
@@ -83,7 +83,7 @@ class SessionController:
 
         # saving sources used
         self.session_repository.set_session_sources(session_id=session.session_id,
-                                                    sources=chain.sources)
+                                                    sources=chain_factory.sources)
 
     def get_session_last_source(self, user_id: int, session_id: UUID):
         session = self.session_repository.get_by_id(session_id=session_id)
@@ -109,8 +109,8 @@ class SessionController:
             raise NotFoundException("Tenant not found")
 
         # retrieving chatbot
-        chatbot = await self.chatbot_repository.get_by_id_and_tenant_id(
-            tenant_id= tenant_id,
+        chatbot = await self.chatbot_repository.get_by_id(
+            tenant_id=tenant_id,
             chatbot_id=chatbot_id
         )
         if chatbot is None:
@@ -120,8 +120,8 @@ class SessionController:
             raise NotFoundException("Chatbot not found in this tenant")
 
         # retrieving ai model settings
-        ai_model_settings = self.settings_repository.get_by_id(user_id)
-        if ai_model_settings is None:
+        embedding_model = self.settings_repository.get_embedding_model()
+        if embedding_model is None:
             raise NotFoundException("AI Model settings not found")
 
         # creating session
@@ -131,7 +131,8 @@ class SessionController:
                 user_id=user_id,
                 tenant_id=tenant_id,
                 chatbot_id=chatbot_id,
-                ai_model_settings=ai_model_settings,
+                embedding_model=embedding_model,
+                chat_model=chatbot.chatbot_model(),
                 message_history=[SystemMessage(content=chatbot.system_prompt)],
                 created_at=datetime.datetime.now()
             )
