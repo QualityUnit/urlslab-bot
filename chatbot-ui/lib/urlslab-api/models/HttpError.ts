@@ -1,9 +1,9 @@
-interface ValidationErrorItem {
+export interface ValidationErrorItem {
   loc: Array<string | number>;
   msg: string;
   type: string;
 }
 
-interface HTTPValidationError {
+export interface HTTPValidationError {
   detail: ValidationErrorItem[];
 }

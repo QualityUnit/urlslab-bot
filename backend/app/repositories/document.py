@@ -74,7 +74,7 @@ class DocumentRepository:
                     ),
                 ]
             ),
-            score_threshold=kwargs.get("score_threshold", 0.5),
+            score_threshold=kwargs.get("score_threshold", 0.1),
             limit=10,
         )
         return self._convert_qdrant_docs_to_urlslab_docs(documents)
