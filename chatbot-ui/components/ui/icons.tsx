@@ -104,40 +104,23 @@ function IconOpenAI({ className, ...props }: React.ComponentProps<'svg'>) {
   )
 }
 
-function IconVercel({ className, ...props }: React.ComponentProps<'svg'>) {
+function IconURLsLab({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
     <svg
-      aria-label="Vercel logomark"
-      role="img"
-      viewBox="0 0 74 64"
-      className={cn('h-4 w-4', className)}
-      {...props}
-    >
-      <path
-        d="M37.5896 0.25L74.5396 64.25H0.639648L37.5896 0.25Z"
-        fill="currentColor"
-      ></path>
-    </svg>
-  )
-}
-
-function IconGitHub({ className, ...props }: React.ComponentProps<'svg'>) {
-  return (
-    <svg
-      role="img"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
-      className={cn('h-4 w-4', className)}
+      viewBox="0 0 24 24"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('ml-2 h-4 w-4', className)}
       {...props}
     >
-      <title>GitHub</title>
-      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+      <title>URLsLab icon</title>
+      <path d="M12.8277 15.3183C12.8277 18.532 10.2135 21.1463 6.99978 21.1463C3.78609 21.1463 1.17183 18.532 1.17183 15.3183C1.16929 14.5404 1.32375 13.7699 1.62596 13.053C1.92817 12.3361 2.37192 11.6876 2.93065 11.1462C3.12504 10.9612 3.38453 10.8602 3.65287 10.8651C3.92121 10.8701 4.17677 10.9806 4.36417 11.1728C4.55156 11.3649 4.65568 11.6232 4.65394 11.8915C4.65221 12.1599 4.54477 12.4168 4.35492 12.6065C3.81571 13.1324 3.44554 13.8071 3.29169 14.5445C3.13785 15.2818 3.20731 16.0483 3.4912 16.7459C3.7751 17.4436 4.26054 18.0408 4.8855 18.4612C5.51046 18.8816 6.24657 19.1061 6.99978 19.1061C7.75299 19.1061 8.4891 18.8816 9.11406 18.4612C9.73903 18.0408 10.2245 17.4436 10.5084 16.7459C10.7923 16.0483 10.8617 15.2818 10.7079 14.5445C10.554 13.8071 10.1838 13.1324 9.64465 12.6065C9.45479 12.4168 9.34735 12.1599 9.34562 11.8915C9.34389 11.6232 9.448 11.3649 9.6354 11.1728C9.82279 10.9806 10.0784 10.8701 10.3467 10.8651C10.615 10.8602 10.8745 10.9612 11.0689 11.1462C11.6276 11.6876 12.0714 12.3361 12.3736 13.053C12.6758 13.7699 12.8303 14.5404 12.8277 15.3183ZM8.01978 13.7346V6.26619C8.01978 5.99567 7.91232 5.73623 7.72103 5.54494C7.52974 5.35365 7.2703 5.24619 6.99978 5.24619C6.72926 5.24619 6.46982 5.35365 6.27853 5.54494C6.08724 5.73623 5.97978 5.99567 5.97978 6.26619L5.97978 13.7346C5.97978 14.0052 6.08724 14.2646 6.27853 14.4559C6.46982 14.6472 6.72926 14.7546 6.99978 14.7546C7.2703 14.7546 7.52974 14.6472 7.72103 14.4559C7.91232 14.2646 8.01978 14.0052 8.01978 13.7346ZM13.7294 1.40453C13.6398 1.24938 13.511 1.12055 13.3558 1.03102C13.2006 0.941493 13.0246 0.894417 12.8454 0.894531L1.15347 0.894531C0.974365 0.894417 0.798389 0.941463 0.643238 1.03094C0.488087 1.12042 0.359232 1.24917 0.26963 1.40425C0.180029 1.55933 0.132841 1.73527 0.132813 1.91437C0.132784 2.09347 0.179915 2.26942 0.269466 2.42453L2.75929 6.73641C2.89455 6.97086 3.11741 7.14198 3.37884 7.21212C3.64026 7.28226 3.91884 7.24567 4.1533 7.11041C4.38775 6.97515 4.55886 6.75229 4.629 6.49087C4.69914 6.22944 4.66256 5.95086 4.5273 5.71641L2.91977 2.93453L11.0798 2.93453L9.47329 5.71641C9.40631 5.8325 9.36286 5.96064 9.34541 6.09352C9.32796 6.22641 9.33685 6.36142 9.37158 6.49087C9.40631 6.62031 9.46619 6.74165 9.54782 6.84795C9.62944 6.95425 9.7312 7.04344 9.84729 7.11041C9.96338 7.17739 10.0915 7.22084 10.2244 7.23829C10.3573 7.25574 10.4923 7.24685 10.6217 7.21212C10.7512 7.17739 10.8725 7.1175 10.9788 7.03588C11.0851 6.95426 11.1743 6.8525 11.2413 6.73641L13.7308 2.42487C13.8202 2.26965 13.8671 2.09363 13.8668 1.91452C13.8666 1.7354 13.8192 1.55951 13.7294 1.40453Z"/>
     </svg>
   )
 }
 
-function IconSeparator({ className, ...props }: React.ComponentProps<'svg'>) {
+function IconSeparator({className, ...props}: React.ComponentProps<'svg'>) {
   return (
     <svg
       fill="none"
@@ -156,7 +139,7 @@ function IconSeparator({ className, ...props }: React.ComponentProps<'svg'>) {
   )
 }
 
-function IconArrowDown({ className, ...props }: React.ComponentProps<'svg'>) {
+function IconArrowDown({className, ...props}: React.ComponentProps<'svg'>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -165,12 +148,13 @@ function IconArrowDown({ className, ...props }: React.ComponentProps<'svg'>) {
       className={cn('h-4 w-4', className)}
       {...props}
     >
-      <path d="m205.66 149.66-72 72a8 8 0 0 1-11.32 0l-72-72a8 8 0 0 1 11.32-11.32L120 196.69V40a8 8 0 0 1 16 0v156.69l58.34-58.35a8 8 0 0 1 11.32 11.32Z" />
+      <path
+        d="m205.66 149.66-72 72a8 8 0 0 1-11.32 0l-72-72a8 8 0 0 1 11.32-11.32L120 196.69V40a8 8 0 0 1 16 0v156.69l58.34-58.35a8 8 0 0 1 11.32 11.32Z"/>
     </svg>
   )
 }
 
-function IconArrowRight({ className, ...props }: React.ComponentProps<'svg'>) {
+function IconArrowRight({className, ...props}: React.ComponentProps<'svg'>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -179,12 +163,13 @@ function IconArrowRight({ className, ...props }: React.ComponentProps<'svg'>) {
       className={cn('h-4 w-4', className)}
       {...props}
     >
-      <path d="m221.66 133.66-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 1 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z" />
+      <path
+        d="m221.66 133.66-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 1 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z"/>
     </svg>
   )
 }
 
-function IconUser({ className, ...props }: React.ComponentProps<'svg'>) {
+function IconUser({className, ...props}: React.ComponentProps<'svg'>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -193,12 +178,13 @@ function IconUser({ className, ...props }: React.ComponentProps<'svg'>) {
       className={cn('h-4 w-4', className)}
       {...props}
     >
-      <path d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8ZM72 96a56 56 0 1 1 56 56 56.06 56.06 0 0 1-56-56Z" />
+      <path
+        d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8ZM72 96a56 56 0 1 1 56 56 56.06 56.06 0 0 1-56-56Z"/>
     </svg>
   )
 }
 
-function IconPlus({ className, ...props }: React.ComponentProps<'svg'>) {
+function IconPlus({className, ...props}: React.ComponentProps<'svg'>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -207,12 +193,13 @@ function IconPlus({ className, ...props }: React.ComponentProps<'svg'>) {
       className={cn('h-4 w-4', className)}
       {...props}
     >
-      <path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z" />
+      <path
+        d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z"/>
     </svg>
   )
 }
 
-function IconArrowElbow({ className, ...props }: React.ComponentProps<'svg'>) {
+function IconArrowElbow({className, ...props}: React.ComponentProps<'svg'>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -221,7 +208,8 @@ function IconArrowElbow({ className, ...props }: React.ComponentProps<'svg'>) {
       className={cn('h-4 w-4', className)}
       {...props}
     >
-      <path d="M200 32v144a8 8 0 0 1-8 8H67.31l34.35 34.34a8 8 0 0 1-11.32 11.32l-48-48a8 8 0 0 1 0-11.32l48-48a8 8 0 0 1 11.32 11.32L67.31 168H184V32a8 8 0 0 1 16 0Z" />
+      <path
+        d="M200 32v144a8 8 0 0 1-8 8H67.31l34.35 34.34a8 8 0 0 1-11.32 11.32l-48-48a8 8 0 0 1 0-11.32l48-48a8 8 0 0 1 11.32 11.32L67.31 168H184V32a8 8 0 0 1 16 0Z" />
     </svg>
   )
 }
@@ -480,8 +468,7 @@ export {
   IconEdit,
   IconNextChat,
   IconOpenAI,
-  IconVercel,
-  IconGitHub,
+  IconURLsLab,
   IconSeparator,
   IconArrowDown,
   IconArrowRight,

@@ -1,8 +1,6 @@
 import axiosInstance from '../helpers/axios_client';
 import {ChatCompletionRequest, Completed, DocumentSource, SessionResponse,} from '../models/Session';
 import {HTTPValidationError} from "@/lib/urlslab-api/models/HttpError";
-import {UrlslabStream} from "@/lib/urlslab-api/helpers/urlslab-stream";
-import {AIStream} from "ai";
 
 class SessionService {
   apiKey: string;

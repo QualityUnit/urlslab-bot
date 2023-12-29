@@ -6,12 +6,12 @@ import { IconArrowRight } from '@/components/ui/icons'
 
 const exampleMessages = [
   {
-    heading: 'Explain technical concepts',
-    message: `What is a "serverless function"?`
+    heading: 'Explain legislative documents',
+    message: `What is the "AI Act"?`
   },
   {
     heading: 'Summarize an article',
-    message: 'Summarize the following article for a 2nd grader: \n'
+    message: 'Summarize the given text: \n'
   },
   {
     heading: 'Draft an email',
@@ -27,11 +27,8 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
           Welcome to Next.js AI Chatbot!
         </h1>
         <p className="mb-2 leading-normal text-muted-foreground">
-          This is an open source AI chatbot app template built with{' '}
-          <ExternalLink href="https://nextjs.org">Next.js</ExternalLink> and{' '}
-          <ExternalLink href="https://vercel.com/storage/kv">
-            Vercel KV
-          </ExternalLink>
+          URLsLab Bot, is an open source chatbot developed by { ' ' }
+          <ExternalLink href="https://www.urlslab.com">URLsLab</ExternalLink> team.
           .
         </p>
         <p className="leading-normal text-muted-foreground">
