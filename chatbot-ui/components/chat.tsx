@@ -7,22 +7,7 @@ import {ChatList} from '@/components/chat-list'
 import {ChatPanel} from '@/components/chat-panel'
 import {EmptyScreen} from '@/components/empty-screen'
 import {ChatScrollAnchor} from '@/components/chat-scroll-anchor'
-import {useLocalStorage} from '@/lib/hooks/use-local-storage'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog'
-import {useState} from 'react'
-import {Button} from './ui/button'
-import {Input} from './ui/input'
 import {toast} from 'react-hot-toast'
-import {usePathname, useRouter} from 'next/navigation'
-
-const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
@@ -30,8 +15,6 @@ export interface ChatProps extends React.ComponentProps<'div'> {
 }
 
 export function Chat({id, initialMessages, className}: ChatProps) {
-  const router = useRouter()
-  const path = usePathname()
   const {messages, append, reload, stop, isLoading, input, setInput} =
     useChat({
       api: `/api/chat/${id}`,

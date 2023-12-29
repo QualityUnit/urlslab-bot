@@ -1,3 +1,5 @@
+from typing import Optional
+
 from backend.app.models import Chatbot
 from backend.app.repositories import ChatbotRepository, TenantRepository
 from backend.app.schemas.responses.chatbot import ChatbotResponse
@@ -49,6 +51,38 @@ class ChatbotController(BaseController[Chatbot]):
 
         return await self.chatbot_repository.create(
             {
+                "title": title,
+                "system_prompt": system_prompt,
+                "tenant_id": tenant_id,
+                "chat_model_class": chat_model_class,
+                "chat_model_name": chat_model_name,
+            }
+        )
+
+    async def update(self,
+                     id: int,
+                     title: str,
+                     tenant_id: int,
+                     system_prompt: str,
+                     chat_model_class: str,
+                     chat_model_name: str) -> Chatbot:
+        """
+        Adds a Chatbot
+        :param id: the id of the chatbot
+        :param chat_model_class: the chat model class
+        :param chat_model_name: the chat model name
+        :param title: the title of the chatbot
+        :param tenant_id: the tenant id
+        :param system_prompt: the system prompt
+        :return: the chatbot object that was created
+        """
+        chatbot_exists = await self.chatbot_repository.get_by_id(tenant_id=tenant_id, chatbot_id=id)
+        if not chatbot_exists:
+            raise NotFoundException(f"Chatbot with id {id} and tenant id {tenant_id} not found")
+
+        return await self.chatbot_repository.update(
+            {
+                "id": id,
                 "title": title,
                 "system_prompt": system_prompt,
                 "tenant_id": tenant_id,

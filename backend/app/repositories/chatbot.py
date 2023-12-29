@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import Select
 from sqlalchemy.orm import joinedload
 
@@ -49,3 +51,21 @@ class ChatbotRepository(BaseRepository[Chatbot]):
         :return: The joined query.
         """
         return query.options(joinedload(Chatbot.tenant))
+
+    async def update(self, attributes: dict[str, Any] = None) -> Chatbot:
+        """
+        Updates the model instance.
+
+        :param attributes: The attributes to update the model with.
+        :return: The updated model instance.
+        """
+        async with self.session_factory() as session:
+            chatbot = await session.get(Chatbot, attributes["id"])
+            chatbot.title = attributes["title"]
+            chatbot.system_prompt = attributes["system_prompt"]
+            chatbot.chat_model_class = attributes["chat_model_class"]
+            chatbot.chat_model_name = attributes["chat_model_name"]
+            chatbot.tenant_id = attributes["tenant_id"]
+            await session.commit()
+            return Chatbot(**attributes)
+

@@ -22,12 +22,29 @@ async def get_chatbots(
 
 
 @chatbot_router.post("/{tenant_id}", response_model=ChatbotResponse, status_code=201)
-async def create_chatbots(
+async def create_chatbot(
         tenant_id: int,
         chatbot_create: ChatbotCreate,
         chatbot_controller: ChatbotController = Depends(Factory().get_chatbot_controller),
 ) -> ChatbotResponse:
     return await chatbot_controller.add(
+        chatbot_create.title,
+        tenant_id,
+        chatbot_create.system_prompt,
+        chatbot_create.chat_model_class,
+        chatbot_create.chat_model_name,
+    )
+
+
+@chatbot_router.post("/{tenant_id}/{chatbot_id}", response_model=ChatbotResponse, status_code=200)
+async def update_chatbot(
+        tenant_id: int,
+        chatbot_id: int,
+        chatbot_create: ChatbotCreate,
+        chatbot_controller: ChatbotController = Depends(Factory().get_chatbot_controller),
+) -> ChatbotResponse:
+    return await chatbot_controller.update(
+        chatbot_id,
         chatbot_create.title,
         tenant_id,
         chatbot_create.system_prompt,
