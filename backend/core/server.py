@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI, Request
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.routing import APIRoute
 
 from backend.api import router
 from backend.core.config import config
@@ -62,6 +63,10 @@ def make_middleware() -> List[Middleware]:
     return middleware
 
 
+def custom_generate_unique_id(route: APIRoute):
+    return f"{route.name}"
+
+
 def create_app() -> FastAPI:
     # update steps and init
     version_manager = VersionManager()
@@ -75,6 +80,7 @@ def create_app() -> FastAPI:
         redoc_url=None if config.ENV == "prod" else "/redoc",
         dependencies=[Depends(Logging)],
         middleware=make_middleware(),
+        generate_unique_id_function=custom_generate_unique_id,
     )
     init_routers(app_=app_)
     init_listeners(app_=app_)

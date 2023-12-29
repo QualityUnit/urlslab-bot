@@ -266,3 +266,4 @@ pyrightconfig.json
 
 docker/mariadb
 docker/qdrant
+client/
