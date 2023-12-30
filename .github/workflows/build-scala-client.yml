@@ -31,8 +31,6 @@ jobs:
           distribution: 'temurin'
 
       - name: Generate clients
-        env:
-          RUNNER_TEMP: ${{ runner.temp }}
         run: |
           ./scripts/generate-client.sh scala-akka
           echo 'githubOwner := "QualityUnit"' >> ./client/scala-akka/build.sbt
