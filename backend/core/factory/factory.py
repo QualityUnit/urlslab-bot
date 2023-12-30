@@ -1,16 +1,16 @@
 from functools import partial
 
-from backend.app.controllers import TenantController, ChatbotController
-from backend.app.controllers.aimodels import SettingsController
-from backend.app.controllers.document import DocumentController
-from backend.app.controllers.session import SessionController
-from backend.app.models import Tenant, Chatbot
-from backend.app.repositories import TenantRepository, ChatbotRepository
-from backend.app.repositories.aimodels import SettingsRepository
-from backend.app.repositories.document import DocumentRepository
-from backend.app.repositories.session import SessionRepository
-from backend.core.database import qdrant_client, redis_client
-from backend.core.database.session import SessionLocal
+from app.controllers import TenantController, ChatbotController
+from app.controllers.aimodels import SettingsController
+from app.controllers.document import DocumentController
+from app.controllers.session import SessionController
+from app.models import Tenant, Chatbot
+from app.repositories import TenantRepository, ChatbotRepository
+from app.repositories.aimodels import SettingsRepository
+from app.repositories.document import DocumentRepository
+from app.repositories.session import SessionRepository
+from core.database import qdrant_client, redis_client
+from core.database.session import SessionLocal
 
 
 class Factory:

@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, Request, UploadFile, File, Form, Security
 
-from backend.app.controllers import TenantController
-from backend.app.controllers.document import DocumentController
-from backend.app.schemas.extras.completed import Completed
-from backend.app.schemas.requests.document import DocumentUpsert
-from backend.app.schemas.responses.documents import DocumentResponse
-from backend.core.factory import Factory
+from app.controllers import TenantController
+from app.controllers.document import DocumentController
+from app.schemas.extras.completed import Completed
+from app.schemas.requests.document import DocumentUpsert
+from app.schemas.responses.documents import DocumentResponse
+from core.factory import Factory
 
 document_router = APIRouter()
 

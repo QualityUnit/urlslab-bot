@@ -5,9 +5,8 @@ from uuid import UUID
 import langchain
 import langchain_core
 from langchain_core.messages import BaseMessage
-from pydantic import BaseModel, Field
 
-from backend.app.models.aimodel import UrlslabEmbeddingModel, UrlslabChatModel
+from app.models.aimodel import UrlslabEmbeddingModel, UrlslabChatModel
 
 
 class ChatSession:

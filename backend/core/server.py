@@ -6,16 +6,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
 
-from backend.api import router
-from backend.core.config import config
-from backend.core.exceptions import CustomException
-from backend.core.fastapi.dependencies import Logging
-from backend.core.fastapi.middlewares import (
+from api import router
+from core.config import config
+from core.exceptions import CustomException
+from core.fastapi.dependencies import Logging
+from core.fastapi.middlewares import (
     AuthBackend,
     AuthenticationMiddleware,
     SQLAlchemyMiddleware,
 )
-from backend.core.utils.version_manager import VersionManager
+from core.utils.version_manager import VersionManager
 
 
 def on_auth_error(request: Request, exc: Exception):
@@ -67,10 +67,19 @@ def custom_generate_unique_id(route: APIRoute):
     return f"{route.name}"
 
 
+def initial_security_check():
+    # checking api key
+    if config.ENV != "dev" and config.API_KEY == "dev-key":
+        raise Exception("API_KEY is not set")
+
+
 def create_app() -> FastAPI:
     # update steps and init
-    version_manager = VersionManager()
-    version_manager.setup()
+    if config.ENV == "prod":
+        version_manager = VersionManager()
+        version_manager.setup()
+
+    initial_security_check()
 
     app_ = FastAPI(
         title="URLsLab Bot",

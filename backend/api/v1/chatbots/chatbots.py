@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 
-from backend.app.controllers import ChatbotController, TenantController
-from backend.app.schemas.requests.chatbot import ChatbotCreate
-from backend.app.schemas.responses.chatbot import ChatbotResponse
-from backend.core.factory import Factory
+from app.controllers import ChatbotController, TenantController
+from app.schemas.requests.chatbot import ChatbotCreate
+from app.schemas.responses.chatbot import ChatbotResponse
+from core.factory import Factory
 
 chatbot_router = APIRouter()
 

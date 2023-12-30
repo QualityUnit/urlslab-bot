@@ -3,14 +3,14 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Request, Security
 from starlette.responses import Response
 
-from backend.app.controllers.session import SessionController
-from backend.app.schemas.extras.completed import Completed
-from backend.app.schemas.requests.chat import ChatCompletionRequest
-from backend.app.schemas.responses.documents import DocumentSource
+from app.controllers.session import SessionController
+from app.schemas.extras.completed import Completed
+from app.schemas.requests.chat import ChatCompletionRequest
+from app.schemas.responses.documents import DocumentSource
 
-from backend.app.schemas.responses.session import SessionResponse
-from backend.core.exceptions import BadRequestException
-from backend.core.factory import Factory
+from app.schemas.responses.session import SessionResponse
+from core.exceptions import BadRequestException
+from core.factory import Factory
 
 session_router = APIRouter()
 

@@ -1,0 +1,50 @@
+name: Build Clients
+on:
+  push:
+    tags:
+      - 'client/scala/**'
+
+jobs:
+  generate-scala-client:
+    name: "Build Scala client"
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SBT_GITHUB_PACKAGE_VERSION: 0.5.3
+    steps:
+      - name: fetch meta data of client
+        run: echo "CLIENT_VERSION=${GITHUB_REF_NAME##client/*/}" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Start composer
+        run: |
+          docker compose -f "./docker/semanticwrap_standalone.yaml" up -d --build
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Generate clients
+        run: |
+          make install
+          make generate-scala-client
+          echo 'githubOwner := "QualityUnit"' >> ./client/scala-client/build.sbt
+          echo 'githubRepository := "semanticwrap"' >> ./client/scala-client/build.sbt
+          touch ./client/scala-client/project/plugins.sbt
+          echo 'addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.3")' >> ./client/scala-client/project/plugins.sbt
+
+      - name: publish client lib
+        working-directory: client/scala-client
+        run: |
+          sbt '+compile'
+          sbt '+publish'
+
+      - name: Stop containers
+        if: always()
+        run: docker compose -f "./docker/semanticwrap_standalone.yaml" down

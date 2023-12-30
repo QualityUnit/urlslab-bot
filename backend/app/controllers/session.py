@@ -7,16 +7,16 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_core.tracers import ConsoleCallbackHandler
 from starlette.responses import StreamingResponse
 
-from backend.app.models import ChatSession
-from backend.app.repositories import TenantRepository, ChatbotRepository
-from backend.app.repositories.aimodels import SettingsRepository
-from backend.app.repositories.document import DocumentRepository
-from backend.app.repositories.session import SessionRepository
-from backend.app.schemas.requests.chat import ChatCompletionRequest
-from backend.app.schemas.responses.documents import DocumentResponse
-from backend.app.schemas.responses.session import SessionResponse
-from backend.core.chains import DefaultChainFactory
-from backend.core.exceptions import NotFoundException
+from app.models import ChatSession
+from app.repositories import TenantRepository, ChatbotRepository
+from app.repositories.aimodels import SettingsRepository
+from app.repositories.document import DocumentRepository
+from app.repositories.session import SessionRepository
+from app.schemas.requests.chat import ChatCompletionRequest
+from app.schemas.responses.documents import DocumentResponse
+from app.schemas.responses.session import SessionResponse
+from core.chains import DefaultChainFactory
+from core.exceptions import NotFoundException
 
 
 def _get_default_config():

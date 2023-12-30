@@ -1,10 +1,10 @@
 import semver
 from qdrant_client import QdrantClient, models
 
-from backend.app.repositories.aimodels import SettingsRepository
-from backend.core.database import redis_client
-from backend.app.models.aimodel import UrlslabEmbeddingModel
-from backend.core.config import config
+from app.repositories.aimodels import SettingsRepository
+from core.database import redis_client
+from app.models.aimodel import UrlslabEmbeddingModel
+from core.config import config
 
 
 class VersionManager:

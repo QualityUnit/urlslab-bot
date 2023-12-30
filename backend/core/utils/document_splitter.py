@@ -1,8 +1,8 @@
 import tiktoken
 from langchain.text_splitter import TokenTextSplitter
 
-from backend.app.models.aimodel import UrlslabEmbeddingModel
-from backend.app.models.document import UrlslabDocument
+from app.models.aimodel import UrlslabEmbeddingModel
+from app.models.document import UrlslabDocument
 
 
 class UrlslabDocumentSplitter:

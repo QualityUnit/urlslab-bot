@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, Request, Security
 
-from backend.app.controllers import TenantController
+from app.controllers import TenantController
 
-from backend.app.schemas.requests.tenant import TenantCreate
-from backend.app.schemas.responses.tenants import TenantResponse
-from backend.core.factory import Factory
+from app.schemas.requests.tenant import TenantCreate
+from app.schemas.responses.tenants import TenantResponse
+from core.factory import Factory
 
 tenant_router = APIRouter()
 

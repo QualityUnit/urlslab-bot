@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from backend.app.schemas.extras.health import Health
-from backend.core.config import config
+from app.schemas.extras.health import Health
+from core.config import config
 
 health_router = APIRouter()
 

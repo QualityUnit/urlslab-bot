@@ -22,7 +22,7 @@ class Config(BaseSettings):
     DEFAULT_EMBEDDING_MODEL_CLASS: str = "FastEmbedEmbeddings"
     DEFAULT_EMBEDDING_MODEL_NAME: str = "BAAI/bge-small-en"
     VERSION_KEY: str = "urlslab_bot_version"
-    API_KEY: str
+    API_KEY: str = "dev-key"
 
 
 class DevelopmentConfig(Config):

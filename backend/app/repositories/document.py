@@ -4,8 +4,8 @@ from uuid import UUID
 
 from qdrant_client import AsyncQdrantClient, models
 
-from backend.app.models.document import UrlslabDocument
-from backend.core.config import config
+from app.models.document import UrlslabDocument
+from core.config import config
 
 
 class DocumentRepository:

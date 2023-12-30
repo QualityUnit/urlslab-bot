@@ -5,7 +5,7 @@ from sqlalchemy import Select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.expression import select
 
-from backend.core.database import Base
+from core.database import Base
 
 ModelType = TypeVar("ModelType", bound=Base)
 

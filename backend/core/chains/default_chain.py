@@ -5,10 +5,10 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 
-from backend.app.models import ChatSession
-from backend.app.repositories.document import DocumentRepository
-from backend.core.chains.base import BaseUrlslabChainFactory
-from backend.core.chains.templates import RAG_CHAT_TEMPLATE
+from app.models import ChatSession
+from app.repositories.document import DocumentRepository
+from core.chains.base import BaseUrlslabChainFactory
+from core.chains.templates import RAG_CHAT_TEMPLATE
 
 
 class DefaultChainFactory(BaseUrlslabChainFactory):

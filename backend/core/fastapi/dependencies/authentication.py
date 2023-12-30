@@ -1,8 +1,8 @@
 from fastapi import status, Security
 from fastapi.security import APIKeyHeader
 
-from backend.core.config import config
-from backend.core.exceptions.base import CustomException, ForbiddenException
+from core.config import config
+from core.exceptions.base import CustomException, ForbiddenException
 
 
 class AuthenticationRequiredException(CustomException):

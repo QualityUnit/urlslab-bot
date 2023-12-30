@@ -3,8 +3,8 @@ from typing import Any
 from sqlalchemy import Select
 from sqlalchemy.orm import joinedload
 
-from backend.app.models import Chatbot
-from backend.core.repository import BaseRepository
+from app.models import Chatbot
+from core.repository import BaseRepository
 
 
 class ChatbotRepository(BaseRepository[Chatbot]):

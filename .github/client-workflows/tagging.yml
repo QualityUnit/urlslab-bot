@@ -1,0 +1,15 @@
+name: Create Tag
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git config --global user.name "QualityUnitCI"
+          git config --global user.email "yboroumand@qualityuit.com"
+          git tag -a -m "Release UrlslabBot"  "${{ inputs.release_version }}"

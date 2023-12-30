@@ -1,10 +1,10 @@
 from typing import Optional
 
-from backend.app.models import Chatbot
-from backend.app.repositories import ChatbotRepository, TenantRepository
-from backend.app.schemas.responses.chatbot import ChatbotResponse
-from backend.core.controller import BaseController
-from backend.core.exceptions import NotFoundException
+from app.models import Chatbot
+from app.repositories import ChatbotRepository, TenantRepository
+from app.schemas.responses.chatbot import ChatbotResponse
+from core.controller import BaseController
+from core.exceptions import NotFoundException
 
 
 class ChatbotController(BaseController[Chatbot]):

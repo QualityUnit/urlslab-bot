@@ -1,0 +1,12 @@
+version: "1.0"
+
+services:
+    urlslab_bot:
+        container_name: urlslab-bot
+        build:
+            context: ..
+            dockerfile: ./docker/Dockerfile
+        ports:
+            - 9010:9010
+        environment:
+            - ENV=dev

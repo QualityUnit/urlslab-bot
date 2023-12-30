@@ -3,7 +3,7 @@ from uuid import UUID
 
 from redis import Redis
 
-from backend.app.models import ChatSession
+from app.models import ChatSession
 
 SESSION_KEY_PREFIX = "urlslab_bot_session_"
 SESSION_SOURCES_KEY_PREFIX = "urlslab_bot_session_sources_"

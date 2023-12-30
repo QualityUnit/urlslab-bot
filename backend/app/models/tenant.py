@@ -1,18 +1,10 @@
 from enum import Enum
-from uuid import uuid4
 
-from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, String
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy import BigInteger, Column, String
+from sqlalchemy.orm import relationship
 
-from backend.core.database import Base
-from backend.core.database.mixins import TimestampMixin
-from backend.core.security.access_control import (
-    Allow,
-    Authenticated,
-    RolePrincipal,
-    UserPrincipal,
-)
+from core.database import Base
+from core.database.mixins import TimestampMixin
 
 
 class TenantPermission(Enum):

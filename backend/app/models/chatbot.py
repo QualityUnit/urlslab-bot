@@ -1,19 +1,8 @@
-from enum import Enum
-from uuid import uuid4
+from sqlalchemy import BigInteger, Column, ForeignKey, String, Text
 
-from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, String, Text
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship, Mapped
-
-from backend.app.models.aimodel import UrlslabChatModel
-from backend.core.database import Base
-from backend.core.database.mixins import TimestampMixin
-from backend.core.security.access_control import (
-    Allow,
-    Authenticated,
-    RolePrincipal,
-    UserPrincipal,
-)
+from app.models.aimodel import UrlslabChatModel
+from core.database import Base
+from core.database.mixins import TimestampMixin
 
 
 class Chatbot(Base, TimestampMixin):

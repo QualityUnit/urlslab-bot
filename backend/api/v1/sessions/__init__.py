@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from backend.core.fastapi.dependencies.authentication import AuthenticationRequired
+from core.fastapi.dependencies.authentication import AuthenticationRequired
 
 from .sessions import session_router
 

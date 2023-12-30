@@ -3,16 +3,16 @@ from uuid import UUID
 
 from fastapi import UploadFile, File
 
-from backend.app.models.aimodel import UrlslabEmbeddingModel
-from backend.app.models.document import UrlslabDocument, join_document_chunks
-from backend.app.repositories.aimodels import SettingsRepository
-from backend.app.repositories.document import DocumentRepository
-from backend.app.schemas.requests.document import DocumentUpsert
-from backend.app.schemas.responses.documents import DocumentResponse
-from backend.core.exceptions import BadRequestException, NotFoundException
-from backend.core.exceptions.base import UnsupportedMediaType
-from backend.core.utils.document_reader import get_content_reader
-from backend.core.utils.document_splitter import UrlslabDocumentSplitter
+from app.models.aimodel import UrlslabEmbeddingModel
+from app.models.document import UrlslabDocument, join_document_chunks
+from app.repositories.aimodels import SettingsRepository
+from app.repositories.document import DocumentRepository
+from app.schemas.requests.document import DocumentUpsert
+from app.schemas.responses.documents import DocumentResponse
+from core.exceptions import BadRequestException, NotFoundException
+from core.exceptions.base import UnsupportedMediaType
+from core.utils.document_reader import get_content_reader
+from core.utils.document_splitter import UrlslabDocumentSplitter
 
 
 class DocumentController:

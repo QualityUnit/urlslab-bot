@@ -1,7 +1,7 @@
 
-from backend.app.models import Tenant
-from backend.app.repositories import TenantRepository
-from backend.core.controller import BaseController
+from app.models import Tenant
+from app.repositories import TenantRepository
+from core.controller import BaseController
 
 
 class TenantController(BaseController[Tenant]):

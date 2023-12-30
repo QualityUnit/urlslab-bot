@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends, Request, Security
 
-from backend.app.controllers.aimodels import SettingsController
-from backend.app.schemas.requests.aimodel import AIModelCreate
-from backend.app.schemas.responses.aimodel import EmbeddingModelResponse
-from backend.core.factory import Factory
+from app.controllers.aimodels import SettingsController
+from app.schemas.responses.aimodel import EmbeddingModelResponse
+from core.factory import Factory
 
 ai_model_router = APIRouter()
 

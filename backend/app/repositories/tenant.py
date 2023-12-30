@@ -1,5 +1,5 @@
-from backend.app.models import Tenant
-from backend.core.repository import BaseRepository
+from app.models import Tenant
+from core.repository import BaseRepository
 
 
 class TenantRepository(BaseRepository[Tenant]):

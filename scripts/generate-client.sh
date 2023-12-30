@@ -80,8 +80,7 @@ generate_clients() {
 CLIENT_VERSION="${CLIENT_VERSION:-$DEFAULT_CLIENT_VERSION}"
 
 # If necessary install the OpenAPI Generator CLI tool
-# Uncomment the following line if you want the script to try to install it automatically
-install_openapi_cli
+check_openapi_generator
 
 # Wait for server to be up (optional)
 sleep_for_server

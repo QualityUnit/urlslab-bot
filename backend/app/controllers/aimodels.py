@@ -1,6 +1,6 @@
-from backend.app.repositories.aimodels import SettingsRepository
-from backend.app.schemas.responses.aimodel import EmbeddingModelResponse
-from backend.core.exceptions import NotFoundException
+from app.repositories.aimodels import SettingsRepository
+from app.schemas.responses.aimodel import EmbeddingModelResponse
+from core.exceptions import NotFoundException
 
 
 class SettingsController:

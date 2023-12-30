@@ -3,9 +3,9 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from backend.core.database import Base
-from backend.core.exceptions import NotFoundException
-from backend.core.repository import BaseRepository
+from core.database import Base
+from core.exceptions import NotFoundException
+from core.repository import BaseRepository
 
 ModelType = TypeVar("ModelType", bound=Base)
 

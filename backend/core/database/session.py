@@ -3,7 +3,7 @@ from contextvars import ContextVar, Token
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import Session, declarative_base
 
-from backend.core.config import config
+from core.config import config
 
 session_context: ContextVar[str] = ContextVar("session_context")
 

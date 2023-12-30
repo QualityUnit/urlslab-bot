@@ -1,7 +1,7 @@
 import json
 from redis import Redis
-from backend.app.models.aimodel import UrlslabEmbeddingModel
-from backend.core.config import config
+from app.models.aimodel import UrlslabEmbeddingModel
+from core.config import config
 
 
 class SettingsRepository:
