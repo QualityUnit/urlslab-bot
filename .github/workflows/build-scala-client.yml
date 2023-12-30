@@ -32,10 +32,10 @@ jobs:
 
       - name: Generate clients
         run: |
-          ./scripts/generate_clients.sh
-          echo 'githubOwner := "QualityUnit"' >> ./client/scala-client/build.sbt
-          echo 'githubRepository := "semanticwrap"' >> ./client/scala-client/build.sbt
-          touch ./client/scala-client/project/plugins.sbt
+          ./scripts/generate-client.sh scala-akka
+          echo 'githubOwner := "QualityUnit"' >> ./client/scala-akka/build.sbt
+          echo 'githubRepository := "urlslab-bot"' >> ./client/scala-akka/build.sbt
+          touch ./client/scala-akka/project/plugins.sbt
           echo 'addSbtPlugin("com.codecommit" % "sbt-github-packages" % "0.5.3")' >> ./client/scala-akka/project/plugins.sbt
 
       - name: publish client lib
