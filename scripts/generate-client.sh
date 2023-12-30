@@ -15,11 +15,13 @@ GENERATOR_NAME="$1"
 # Function to install OpenAPI Generator CLI
 install_openapi_cli() {
     echo "Installing OpenAPI Generator CLI..."
-    local install_path="$HOME/bin/openapitools"
-    mkdir -p "${install_path}"
+    local install_path="/usr/local/bin"
+    sudo mkdir -p "${install_path}"
     curl -sSL https://raw.githubusercontent.com/OpenAPITools/openapi-generator/master/bin/utils/openapi-generator-cli.sh > "${install_path}/openapi-generator-cli"
-    chmod u+x "${install_path}/openapi-generator-cli"
-    export PATH="$PATH:${install_path}"
+    sudo chmod u+x "${install_path}/openapi-generator-cli"
+
+    # Execute it directly without relying on $PATH
+    alias openapi-generator="${install_path}/openapi-generator-cli"
 }
 
 # Function to check if OpenAPI Generator is installed
