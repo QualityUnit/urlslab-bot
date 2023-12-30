@@ -14,7 +14,7 @@ class Config(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRE_MINUTES: int = 60 * 24
     SECRET_KEY: str = "super-secret-key"
-    MARIADB_URL: str = "mariadb+pymysql://user:password@127.0.0.1:5432/urlslab-bot"
+    MARIADB_URL: str = "mariadb+asyncmy://user:password@127.0.0.1:5432/urlslab-bot"
     QDRANT_URL: str = "http://localhost:6333"
     REDIS_URL: str = "redis://localhost:6379"
     QDRANT_COLLECTION_NAME: str = "urlslab_bot"
