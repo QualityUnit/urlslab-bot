@@ -33,6 +33,7 @@ jobs:
       - name: Generate clients
         env:
           RUNNER_TEMP: ${{ runner.temp }}
+          API_URL_DOC: "http://localhost:9010/docs"
         run: |
           ./scripts/generate-client.sh scala-akka
           echo 'githubOwner := "QualityUnit"' >> ./client/scala-akka/build.sbt
