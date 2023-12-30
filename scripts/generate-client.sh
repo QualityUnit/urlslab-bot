@@ -30,10 +30,10 @@ check_openapi_generator() {
         echo "openapi-generator could not be found"
         install_openapi_cli
         # Ensure that the newly installed binary can be found
-        if ! command -v openapi-generator &> /dev/null; then
-            echo "Failed to install openapi-generator. Please install it manually."
-            exit 1
-        fi
+#        if ! command -v openapi-generator &> /dev/null; then
+#            echo "Failed to install openapi-generator. Please install it manually."
+#            exit 1
+#        fi
     else
         echo "openapi-generator is installed"
     fi
