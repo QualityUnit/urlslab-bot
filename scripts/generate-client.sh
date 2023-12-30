@@ -8,36 +8,29 @@ fi
 
 # Define constants
 API_URL_DOC="http://localhost:9010/openapi.json"
-CLIENTS_DIR="./client"
+CLIENTS_DIR="client"
 DEFAULT_CLIENT_VERSION="0.0.0"
 GENERATOR_NAME="$1"
+OPENAPI_CLI="openapi-generator-cli.jar"
+GENERATOR_VERSION="6.3.0"
 
 # Function to install OpenAPI Generator CLI
 install_openapi_cli() {
     echo "Installing OpenAPI Generator CLI..."
-    local install_path="$RUNNER_TEMP/openapi-generator-cli"
-    mkdir -p "${install_path}"
-    curl -sSL https://raw.githubusercontent.com/OpenAPITools/openapi-generator/master/bin/utils/openapi-generator-cli.sh > "${install_path}/openapi-generator-cli"
-    chmod u+x "${install_path}/openapi-generator-cli"
 
-    # Point to the local installation of openapi-generator
-    export PATH="$PATH:${install_path}"
-}
+    if [ -f "${OPENAPI_CLI}" ]; then
+        echo "OpenAPI Generator CLI is already installed."
+        return 0
+    fi
 
-# Function to check if OpenAPI Generator is installed
-check_openapi_generator() {
-    if ! command -v openapi-generator &> /dev/null; then
-        echo "openapi-generator could not be found"
-        install_openapi_cli
-        # Ensure that the newly installed binary can be found
-#        if ! command -v openapi-generator &> /dev/null; then
-#            echo "Failed to install openapi-generator. Please install it manually."
-#            exit 1
-#        fi
-    else
-        echo "openapi-generator is installed"
+    echo "Downloading OpenAPI Generator CLI version ${GENERATOR_VERSION}..."
+    wget "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/${GENERATOR_VERSION}/openapi-generator-cli-${GENERATOR_VERSION}.jar" -O "${OPENAPI_CLI}"
+    if [ ! -f "${OPENAPI_CLI}" ]; then
+        echo "Failed to download OpenAPI Generator CLI JAR. Please check the provided version."
+        exit 1
     fi
 }
+
 # Function to wait for the OpenAPI Documentation to be accessible
 sleep_for_server() {
     for i in {0..9}; do
@@ -56,9 +49,8 @@ sleep_for_server() {
 generate_clients() {
     case "${GENERATOR_NAME}" in
         "scala-akka")
-            output_dir="${CLIENTS_DIR}/${GENERATOR_NAME}"
-            mkdir -p "${output_dir}"
-            openapi-generator generate \
+            mkdir -p "${GENERATOR_NAME}"
+            java -jar "${OPENAPI_CLI}" generate \
                 -i "${API_URL_DOC}" \
                 --artifact-id urlslab-bot-scala \
                 --api-package bot.urlslab \
@@ -67,7 +59,7 @@ generate_clients() {
                 --group-id bot.urlslab \
                 --additional-properties=modelPropertyNaming=original \
                 -g scala-akka \
-                -o "${output_dir}"
+                -o "${GENERATOR_NAME}"
             ;;
         *)
             echo "Generator '${GENERATOR_NAME}' not supported."
@@ -81,15 +73,16 @@ generate_clients() {
 # Check for CLIENT_VERSION environment variable, if not present use default
 CLIENT_VERSION="${CLIENT_VERSION:-$DEFAULT_CLIENT_VERSION}"
 
-# If necessary install the OpenAPI Generator CLI tool
-check_openapi_generator
-
-# Wait for server to be up (optional)
-sleep_for_server
-
 # Create clients directory and clean previous clients
 rm -rf "${CLIENTS_DIR}"
 mkdir -p "${CLIENTS_DIR}"
+cd "${CLIENTS_DIR}"
+
+# If necessary install the OpenAPI Generator CLI tool
+install_openapi_cli
+
+# Wait for server to be up (optional)
+sleep_for_server
 
 # Generate the clients based on the specified generator
 generate_clients
