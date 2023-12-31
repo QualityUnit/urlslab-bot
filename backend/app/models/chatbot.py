@@ -1,4 +1,6 @@
-from sqlalchemy import BigInteger, Column, ForeignKey, String, Text
+import uuid
+
+from sqlalchemy import UUID, Column, ForeignKey, String, Text
 
 from app.models.aimodel import UrlslabChatModel
 from core.database import Base
@@ -8,7 +10,7 @@ from core.database.mixins import TimestampMixin
 class Chatbot(Base, TimestampMixin):
     __tablename__ = "chatbots"
 
-    id = Column(String(255), primary_key=True)
+    id = Column(UUID, primary_key=True, default=uuid.uuid4)
     title = Column(String(255), nullable=False)
     system_prompt = Column(Text, nullable=False)
     chat_model_class = Column(String(255), nullable=False)

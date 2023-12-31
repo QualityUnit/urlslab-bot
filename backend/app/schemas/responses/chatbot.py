@@ -8,7 +8,7 @@ class ChatbotResponse(BaseModel):
     )
     chat_model_class: str = Field(..., description="AI Model Class", example="OpenAI")
     chat_model_name: str = Field(..., description="AI Model Name", example="GPT-4")
-    id: str = Field(..., description="Chatbot id", example=1)
+    id: UUID4 = Field(..., description="Chatbot id", example=1)
 
     class Config:
         from_attributes = True
