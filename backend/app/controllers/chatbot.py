@@ -90,3 +90,16 @@ class ChatbotController(BaseController[Chatbot]):
                 "chat_model_name": chat_model_name,
             }
         )
+
+    async def delete_chatbot(self, id: str, tenant_id: str) -> None:
+        """
+        Deletes a Chatbot
+        :param id: the id of the chatbot
+        :param tenant_id:  the tenant id
+        :return:
+        """
+        chatbot = await self.chatbot_repository.get_by_id(tenant_id=tenant_id, chatbot_id=id)
+        if not chatbot:
+            raise NotFoundException(f"Chatbot with id {id} and tenant id {tenant_id} not found")
+
+        await self.chatbot_repository.delete(chatbot)

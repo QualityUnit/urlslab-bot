@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from app.controllers import ChatbotController, TenantController
+from app.schemas.extras.completed import Completed
 from app.schemas.requests.chatbot import ChatbotCreate
 from app.schemas.responses.chatbot import ChatbotResponse
 from core.factory import Factory
@@ -51,6 +52,19 @@ async def update_chatbot(
         chatbot_create.chat_model_class,
         chatbot_create.chat_model_name,
     )
+
+
+@chatbot_router.delete("/{tenant_id}/{chatbot_id}")
+async def delete_chatbot(
+        tenant_id: str,
+        chatbot_id: str,
+        chatbot_controller: ChatbotController = Depends(Factory().get_chatbot_controller),
+) -> Completed:
+    await chatbot_controller.delete_chatbot(
+        chatbot_id,
+        tenant_id,
+    )
+    return Completed(status="success")
 
 
 @chatbot_router.get("/{tenant_id}/{chatbot_id}", response_model=ChatbotResponse)
