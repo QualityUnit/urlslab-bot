@@ -13,7 +13,7 @@ class ChatbotRepository(BaseRepository[Chatbot]):
     """
 
     async def get_by_tenant_id(self,
-                               tenant_id: int,
+                               tenant_id: str,
                                join_: set[str] | None = None) -> list[Chatbot]:
         """
         Get all chatbots associated to current tenant id.
@@ -30,7 +30,7 @@ class ChatbotRepository(BaseRepository[Chatbot]):
 
         return await self._all(query)
 
-    async def get_by_id(self, tenant_id: int, chatbot_id: int) -> Chatbot:
+    async def get_by_id(self, tenant_id: str, chatbot_id: str) -> Chatbot:
         """
         Get chatbot by id.
 

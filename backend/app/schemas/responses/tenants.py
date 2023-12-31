@@ -6,7 +6,7 @@ class TenantResponse(BaseModel):
     description: str = Field(
         ..., description="Tenant description", example="Tenant 1 description"
     )
-    id: int = Field(..., description="Tenant id", example=1)
+    id: str = Field(..., description="Tenant id", example="Tenant 1 id")
 
     class Config:
         from_attributes = True

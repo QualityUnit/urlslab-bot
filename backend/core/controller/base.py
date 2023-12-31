@@ -17,7 +17,7 @@ class BaseController(Generic[ModelType]):
         self.model_class = model
         self.repository = repository
 
-    async def get_by_id(self, id_: int, join_: set[str] | None = None) -> ModelType:
+    async def get_by_id(self, id_: str, join_: set[str] | None = None) -> ModelType:
         """
         Returns the model instance matching the id.
 

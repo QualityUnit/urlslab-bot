@@ -1,6 +1,6 @@
 from enum import Enum
 
-from sqlalchemy import BigInteger, Column, String
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 from core.database import Base
@@ -17,7 +17,7 @@ class TenantPermission(Enum):
 class Tenant(Base, TimestampMixin):
     __tablename__ = "tenants"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(String(255), primary_key=True)
     title = Column(String(255), nullable=False)
     description = Column(String(255), nullable=False)
 

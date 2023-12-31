@@ -7,7 +7,7 @@ class TenantRepository(BaseRepository[Tenant]):
     Tenant repository provides all the database operations for the Tenant model.
     """
 
-    async def get_by_id(self, tenant_id: int) -> Tenant:
+    async def get_by_id(self, tenant_id: str) -> Tenant:
         """
         Get tenant by id.
 

@@ -100,9 +100,8 @@ class SessionController:
         return [DocumentResponse(**source) for source in sources]
 
     async def create_session(self,
-                             user_id: int,
-                             tenant_id: int,
-                             chatbot_id: int) -> SessionResponse:
+                             tenant_id: str,
+                             chatbot_id: str) -> SessionResponse:
         # retrieving tenant
         tenant = await self.tenant_repository.get_by_id(tenant_id=tenant_id)
         if tenant is None:
@@ -128,7 +127,6 @@ class SessionController:
         session = self.session_repository.add(
             ChatSession(
                 session_id=uuid.uuid4(),
-                user_id=user_id,
                 tenant_id=tenant_id,
                 chatbot_id=chatbot_id,
                 embedding_model=embedding_model,
@@ -141,10 +139,9 @@ class SessionController:
         return SessionResponse(session_id=session.session_id,
                                created_at=session.get_created_at_string())
 
-    def delete_session(self, user_id: int, session_id: UUID):
+    def delete_session(self, session_id: UUID):
         session = self.session_repository.get_by_id(session_id=session_id)
         if session is not None:
-            if session.user_id == user_id:
-                self.session_repository.delete(session_id=session_id)
-            else:
-                raise NotFoundException("Session not found")
+            self.session_repository.delete(session_id=session_id)
+        else:
+            raise NotFoundException("Session not found")

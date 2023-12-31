@@ -25,6 +25,7 @@ async def create_tenant(
     tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
 ) -> TenantResponse:
     task = await tenant_controller.add(
+        tenant_id=tenant_create.id,
         title=tenant_create.title,
         description=tenant_create.description,
     )
@@ -33,7 +34,7 @@ async def create_tenant(
 
 @tenant_router.get("/{tenant_id}", response_model=TenantResponse)
 async def get_tenant(
-    tenant_id: int,
+    tenant_id: str,
     tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
 ) -> TenantResponse:
     tenant = await tenant_controller.get_by_id(tenant_id)

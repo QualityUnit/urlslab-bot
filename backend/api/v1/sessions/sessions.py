@@ -46,23 +46,21 @@ def get_session_last_source(
 
 @session_router.put("/{tenant_id}/{chatbot_id}", response_model=SessionResponse, status_code=201)
 async def create_session(
-        tenant_id: int,
-        chatbot_id: int,
-        request: Request,
+        tenant_id: str,
+        chatbot_id: str,
         session_controller: SessionController = Depends(Factory().get_session_controller),
 ) -> SessionResponse:
-    return await session_controller.create_session(request.user.id, tenant_id, chatbot_id)
+    return await session_controller.create_session(tenant_id, chatbot_id)
 
 
 @session_router.delete("/{session_id}", response_model=Completed)
 async def delete_session(
         session_id: str,
-        request: Request,
         session_controller: SessionController = Depends(Factory().get_session_controller),
 ) -> Completed:
     try:
         UUID(session_id)
     except ValueError:
         raise BadRequestException("Invalid session id")
-    session_controller.delete_session(request.user.id, UUID(session_id))
+    session_controller.delete_session(UUID(session_id))
     return Completed(status="success")

@@ -11,10 +11,11 @@ class TenantController(BaseController[Tenant]):
         super().__init__(model=Tenant, repository=tenant_repository)
         self.tenant_repository = tenant_repository
 
-    async def add(self, title: str, description: str) -> Tenant:
+    async def add(self, tenant_id: str, title: str, description: str) -> Tenant:
         """
         Adds a tenant.
 
+        :param tenant_id: the tenant id.
         :param title: The task title.
         :param description: The task description.
         :return: The task.
@@ -22,6 +23,7 @@ class TenantController(BaseController[Tenant]):
 
         return await self.tenant_repository.create(
             {
+                "id": tenant_id,
                 "title": title,
                 "description": description,
             }

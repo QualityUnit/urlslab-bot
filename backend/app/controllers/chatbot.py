@@ -13,7 +13,7 @@ class ChatbotController(BaseController[Chatbot]):
         super().__init__(model=Chatbot, repository=chatbot_repository)
         self.chatbot_repository = chatbot_repository
 
-    async def get_by_tenant_id(self, tenant_id: int) -> list[Chatbot]:
+    async def get_by_tenant_id(self, tenant_id: str) -> list[Chatbot]:
         """
         Returns a list of chatbots based on tenant_id.
         :param tenant_id: the tenant id, the chatbots belong to
@@ -21,7 +21,7 @@ class ChatbotController(BaseController[Chatbot]):
         """
         return await self.chatbot_repository.get_by_tenant_id(tenant_id=tenant_id)
 
-    async def get_by_id_and_tenant_id(self, tenant_id: int, chatbot_id: int) -> ChatbotResponse:
+    async def get_by_id_and_tenant_id(self, tenant_id: str, chatbot_id: str) -> ChatbotResponse:
         """
         Returns a chatbot based on tenant_id and chatbot_id.
         :param tenant_id: the tenant id, the chatbot belongs to
@@ -35,7 +35,7 @@ class ChatbotController(BaseController[Chatbot]):
 
     async def add(self,
                   title: str,
-                  tenant_id: int,
+                  tenant_id: str,
                   system_prompt: str,
                   chat_model_class: str,
                   chat_model_name: str) -> Chatbot:
@@ -60,9 +60,9 @@ class ChatbotController(BaseController[Chatbot]):
         )
 
     async def update(self,
-                     id: int,
+                     id: str,
                      title: str,
-                     tenant_id: int,
+                     tenant_id: str,
                      system_prompt: str,
                      chat_model_class: str,
                      chat_model_name: str) -> Chatbot:

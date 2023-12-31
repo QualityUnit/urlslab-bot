@@ -61,6 +61,19 @@ generate_clients() {
                 -g scala-akka \
                 -o "${GENERATOR_NAME}"
             ;;
+        "scala-pekko")
+            mkdir -p "${GENERATOR_NAME}"
+            java -jar "${OPENAPI_CLI}" generate \
+                -i "${API_URL_DOC}" \
+                --artifact-id urlslab-bot-scala \
+                --api-package bot.urlslab \
+                --git-repo-id urlslab-bot \
+                --artifact-version "${CLIENT_VERSION}" \
+                --group-id bot.urlslab \
+                --additional-properties=modelPropertyNaming=original \
+                -g scala-akka \
+                -o "${GENERATOR_NAME}"
+            ;;
         *)
             echo "Generator '${GENERATOR_NAME}' not supported."
             exit 1

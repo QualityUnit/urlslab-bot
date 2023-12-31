@@ -13,7 +13,7 @@ class DocumentRepository:
         self.qdrant_client = qdrant_client
         self.collection_name = config.QDRANT_COLLECTION_NAME
 
-    async def get_by_id(self, tenant_id: int, document_id: UUID) -> List[UrlslabDocument]:
+    async def get_by_id(self, tenant_id: str, document_id: UUID) -> List[UrlslabDocument]:
         """
         Gets the document by its id
         :return: UrlslabDocument The document to be returned with the given id
@@ -36,7 +36,7 @@ class DocumentRepository:
         )
         return self._convert_qdrant_docs_to_urlslab_docs(documents[0])
 
-    async def get_by_tenant_id(self, tenant_id: int) -> List[UrlslabDocument]:
+    async def get_by_tenant_id(self, tenant_id: str) -> List[UrlslabDocument]:
         """
         Gets all documents by tenant id
         :return: UrlslabDocument The document to be returned related to tenant_id
@@ -56,7 +56,7 @@ class DocumentRepository:
         return self._convert_qdrant_docs_to_urlslab_docs(documents[0])
 
     async def search_by_tenant_id(self,
-                                  tenant_id: int,
+                                  tenant_id: str,
                                   query_vector: list[float],
                                   **kwargs) -> List[UrlslabDocument]:
         """
@@ -80,7 +80,7 @@ class DocumentRepository:
         return self._convert_qdrant_docs_to_urlslab_docs(documents)
 
     async def upsert(self,
-                     tenant_id: int,
+                     tenant_id: str,
                      documents: list[UrlslabDocument]) -> list[UrlslabDocument]:
         """
         Upserts the document
@@ -106,7 +106,7 @@ class DocumentRepository:
         )
         return documents
 
-    async def delete_by_id(self, tenant_id: int, document_ids: list[str]):
+    async def delete_by_id(self, tenant_id: str, document_ids: list[str]):
         """
         Deletes the document
         :return: None

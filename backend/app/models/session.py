@@ -12,16 +12,14 @@ from app.models.aimodel import UrlslabEmbeddingModel, UrlslabChatModel
 class ChatSession:
 
     def __init__(self,
-                 user_id: int,
-                 tenant_id: int,
-                 chatbot_id: int,
+                 tenant_id: str,
+                 chatbot_id: str,
                  embedding_model: UrlslabEmbeddingModel,
                  chat_model: UrlslabChatModel,
                  message_history: list[BaseMessage],
                  created_at: datetime,
                  session_id: Optional[UUID] = None):
         self.session_id = session_id or UUID()
-        self.user_id = user_id
         self.tenant_id = tenant_id
         self.chatbot_id = chatbot_id
         self.embedding_model = embedding_model
@@ -32,7 +30,6 @@ class ChatSession:
     def to_dict(self):
         return {
             "session_id": str(self.session_id),
-            "user_id": self.user_id,
             "tenant_id": self.tenant_id,
             "chatbot_id": self.chatbot_id,
             "embedding_model": self.embedding_model.to_dict(),
@@ -45,7 +42,6 @@ class ChatSession:
     def from_dict(cls, data: dict):
         return cls(
             session_id=UUID(data.get("session_id")),
-            user_id=data.get("user_id"),
             tenant_id=data.get("tenant_id"),
             chatbot_id=data.get("chatbot_id"),
             embedding_model=UrlslabEmbeddingModel(**data.get("embedding_model")),

@@ -66,7 +66,7 @@ class VersionManager:
         self.qdrant_client.create_payload_index(
             collection_name=collection_name,
             field_name="tenant_id",
-            field_schema=models.PayloadSchemaType.INTEGER,
+            field_schema=models.PayloadSchemaType.KEYWORD,
         )
 
         # creating index on document_id

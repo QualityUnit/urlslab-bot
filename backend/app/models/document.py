@@ -9,7 +9,7 @@ class UrlslabDocument:
                  title: str,
                  content: str,
                  source: str,
-                 tenant_id: int,
+                 tenant_id: str,
                  point_id: Optional[int] = None,
                  chunk_id: Optional[int] = None,
                  **kwargs):

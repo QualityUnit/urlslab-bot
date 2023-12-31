@@ -11,7 +11,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
-from backend.app.models import Tenant, Chatbot
+from app.models import Tenant, Chatbot
 
 # revision identifiers, used by Alembic.
 revision: str = '11761fc744aa'
