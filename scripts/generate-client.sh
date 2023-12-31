@@ -12,7 +12,7 @@ CLIENTS_DIR="client"
 DEFAULT_CLIENT_VERSION="0.0.0"
 GENERATOR_NAME="$1"
 OPENAPI_CLI="openapi-generator-cli.jar"
-GENERATOR_VERSION="6.3.0"
+GENERATOR_VERSION="7.2.0"
 
 # Function to install OpenAPI Generator CLI
 install_openapi_cli() {
