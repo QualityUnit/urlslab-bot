@@ -1,3 +1,5 @@
+import json
+
 import semver
 from qdrant_client import QdrantClient, models
 
@@ -14,6 +16,7 @@ class VersionManager:
         self.settings_repo = SettingsRepository(redis_client=redis_client)
         self.collection_name = config.QDRANT_COLLECTION_NAME
         self.release_version = config.RELEASE_VERSION
+        self.index_schema_definition = json.load(open(config.INDEX_SCHEMA_DEFINITION_PATH))
 
     def setup(self):
         settings_repo = SettingsRepository(redis_client=redis_client)
@@ -89,6 +92,14 @@ class VersionManager:
             field_name="title",
             field_schema=models.PayloadSchemaType.TEXT,
         )
+
+        # Creating custom user indexes
+        for schema in self.index_schema_definition:
+            self.qdrant_client.create_payload_index(
+                collection_name=collection_name,
+                field_name=schema["field_name"],
+                field_schema=schema["field_type"],
+            )
 
     def update(self, embedding_model: UrlslabEmbeddingModel, last_version: str):
         pass
