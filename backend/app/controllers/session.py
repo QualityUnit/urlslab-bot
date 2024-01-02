@@ -1,4 +1,5 @@
 import datetime
+import json
 import typing
 import uuid
 from uuid import UUID
@@ -131,6 +132,7 @@ class SessionController:
                 chatbot_id=chatbot_id,
                 embedding_model=embedding_model,
                 chat_model=chatbot.chatbot_model(),
+                chatbot_filter=json.load(chatbot.chatbot_filter),
                 message_history=[SystemMessage(content=chatbot.system_prompt)],
                 created_at=datetime.datetime.now()
             )

@@ -48,7 +48,8 @@ class DefaultChainFactory(BaseUrlslabChainFactory):
         query_vector = await self.session.embedding_model.aembed_query(query)
         documents = await self.document_repository.search_by_tenant_id(self.session.tenant_id,
                                                                        query_vector,
-                                                                       score_threshold=0.8)
+                                                                       score_threshold=0.8,
+                                                                       filter=self.session.chatbot_filter)
 
         context = ""
         for doc in documents:

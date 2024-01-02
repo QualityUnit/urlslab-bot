@@ -63,16 +63,22 @@ class DocumentRepository:
         Gets all documents by tenant id
         :return: UrlslabDocument The document to be returned related to tenant_id
         """
+        document_filter = kwargs.get("filter")
+        must_filter = [
+            models.FieldCondition(
+                key="tenant_id",
+                match=models.MatchValue(value=tenant_id),
+            ),
+        ]
+        if document_filter is not None:
+            for f in self.parse_filter(document_filter):
+                must_filter.append(f)
+
         documents = await self.qdrant_client.search(
             collection_name=self.collection_name,
             query_vector=query_vector,
             query_filter=models.Filter(
-                must=[
-                    models.FieldCondition(
-                        key="tenant_id",
-                        match=models.MatchValue(value=tenant_id),
-                    ),
-                ]
+                must=must_filter
             ),
             score_threshold=kwargs.get("score_threshold", 0.1),
             limit=10,
@@ -128,6 +134,40 @@ class DocumentRepository:
                 ]
             )
         )
+
+    @staticmethod
+    def parse_filter(filter: dict) -> models.Filter:
+        """
+        Parses the filter
+        :return: models.Filter
+        """
+        must = []
+        should = []
+        for key, value in filter.items():
+            if key == "should":
+                for should_filter in value:
+                    should.append(
+                        models.FieldCondition(
+                            key=should_filter["key"],
+                            match=models.MatchValue(value=should_filter["value"]),
+                        )
+                    )
+            elif key == "must":
+                for must_filter in value:
+                    must.append(
+                        models.FieldCondition(
+                            key=must_filter["key"],
+                            match=models.MatchValue(value=must_filter["value"]),
+                        )
+                    )
+            else:
+                must.append(
+                    models.FieldCondition(
+                        key=key,
+                        match=models.MatchValue(value=value),
+                    )
+                )
+        return models.Filter(must=must, should=should)
 
     @staticmethod
     def _convert_qdrant_docs_to_urlslab_docs(qdrant_docs: Union[List[models.Record], List[models.ScoredPoint]]):

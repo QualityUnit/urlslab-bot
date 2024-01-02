@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from app.models import Chatbot
@@ -38,9 +39,11 @@ class ChatbotController(BaseController[Chatbot]):
                   tenant_id: str,
                   system_prompt: str,
                   chat_model_class: str,
-                  chat_model_name: str) -> Chatbot:
+                  chat_model_name: str,
+                  chatbot_filter: dict | None) -> Chatbot:
         """
         Adds a Chatbot
+        :param chatbot_filter: filter used to retrieve documents for chatbot
         :param chat_model_class: the chat model class
         :param chat_model_name: the chat model name
         :param title: the title of the chatbot
@@ -56,6 +59,7 @@ class ChatbotController(BaseController[Chatbot]):
                 "tenant_id": tenant_id,
                 "chat_model_class": chat_model_class,
                 "chat_model_name": chat_model_name,
+                "chatbot_filter": None if chatbot_filter is None else json.dumps(chatbot_filter),
             }
         )
 
@@ -65,9 +69,11 @@ class ChatbotController(BaseController[Chatbot]):
                      tenant_id: str,
                      system_prompt: str,
                      chat_model_class: str,
-                     chat_model_name: str) -> Chatbot:
+                     chat_model_name: str,
+                     chatbot_filter: dict) -> Chatbot:
         """
         Adds a Chatbot
+        :param chatbot_filter: filter used to retrieve documents for chatbot
         :param id: the id of the chatbot
         :param chat_model_class: the chat model class
         :param chat_model_name: the chat model name
@@ -88,6 +94,7 @@ class ChatbotController(BaseController[Chatbot]):
                 "tenant_id": tenant_id,
                 "chat_model_class": chat_model_class,
                 "chat_model_name": chat_model_name,
+                "chatbot_filter": None if chatbot_filter is None else json.dumps(chatbot_filter),
             }
         )
 

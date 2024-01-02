@@ -15,6 +15,7 @@ class Chatbot(Base, TimestampMixin):
     system_prompt = Column(Text, nullable=False)
     chat_model_class = Column(String(255), nullable=False)
     chat_model_name = Column(String(255), nullable=False)
+    chatbot_filter = Column(Text, nullable=True)
 
     # Tenant relation
     tenant_id = Column(
