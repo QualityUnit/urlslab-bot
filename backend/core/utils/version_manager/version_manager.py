@@ -27,7 +27,10 @@ class VersionManager:
                 embedding_model_name=config.DEFAULT_EMBEDDING_MODEL_NAME,
                 embedding_model_class=config.DEFAULT_EMBEDDING_MODEL_CLASS,
             )
-            self.init(embedding_model=embedding_model)
+            try:
+                self.init(embedding_model=embedding_model)
+            except Exception as e:
+                print(e)
             settings_repo.set_embedding_model(embedding_model=embedding_model)
             settings_repo.set_last_version(version=self.release_version)
         else:

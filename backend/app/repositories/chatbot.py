@@ -1,4 +1,5 @@
 from typing import Any
+from uuid import UUID
 
 from sqlalchemy import Select
 from sqlalchemy.orm import joinedload
@@ -30,7 +31,7 @@ class ChatbotRepository(BaseRepository[Chatbot]):
 
         return await self._all(query)
 
-    async def get_by_id(self, tenant_id: str, chatbot_id: str) -> Chatbot:
+    async def get_by_id(self, tenant_id: str, chatbot_id: UUID) -> Chatbot:
         """
         Get chatbot by id.
 

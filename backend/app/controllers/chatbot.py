@@ -1,5 +1,6 @@
 import json
 from typing import Optional
+from uuid import UUID
 
 from app.models import Chatbot
 from app.repositories import ChatbotRepository, TenantRepository
@@ -22,7 +23,7 @@ class ChatbotController(BaseController[Chatbot]):
         """
         return await self.chatbot_repository.get_by_tenant_id(tenant_id=tenant_id)
 
-    async def get_by_id_and_tenant_id(self, tenant_id: str, chatbot_id: str) -> ChatbotResponse:
+    async def get_by_id_and_tenant_id(self, tenant_id: str, chatbot_id: UUID) -> ChatbotResponse:
         """
         Returns a chatbot based on tenant_id and chatbot_id.
         :param tenant_id: the tenant id, the chatbot belongs to

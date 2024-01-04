@@ -102,7 +102,7 @@ class SessionController:
 
     async def create_session(self,
                              tenant_id: str,
-                             chatbot_id: str) -> SessionResponse:
+                             chatbot_id: UUID) -> SessionResponse:
         # retrieving tenant
         tenant = await self.tenant_repository.get_by_id(tenant_id=tenant_id)
         if tenant is None:
@@ -132,7 +132,7 @@ class SessionController:
                 chatbot_id=chatbot_id,
                 embedding_model=embedding_model,
                 chat_model=chatbot.chatbot_model(),
-                chatbot_filter=json.load(chatbot.chatbot_filter),
+                chatbot_filter=None if chatbot.chatbot_filter is None else json.load(chatbot.chatbot_filter),
                 message_history=[SystemMessage(content=chatbot.system_prompt)],
                 created_at=datetime.datetime.now()
             )

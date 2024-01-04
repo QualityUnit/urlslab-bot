@@ -50,6 +50,11 @@ async def create_session(
         chatbot_id: str,
         session_controller: SessionController = Depends(Factory().get_session_controller),
 ) -> SessionResponse:
+    try:
+        chatbot_id = UUID(chatbot_id)
+    except ValueError:
+        raise BadRequestException("Invalid chatbot id")
+
     return await session_controller.create_session(tenant_id, chatbot_id)
 
 

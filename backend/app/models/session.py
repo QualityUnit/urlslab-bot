@@ -13,10 +13,10 @@ class ChatSession:
 
     def __init__(self,
                  tenant_id: str,
-                 chatbot_id: str,
+                 chatbot_id: UUID,
                  embedding_model: UrlslabEmbeddingModel,
                  chat_model: UrlslabChatModel,
-                 chatbot_filter: dict,
+                 chatbot_filter: dict | None,
                  message_history: list[BaseMessage],
                  created_at: datetime,
                  session_id: Optional[UUID] = None):
@@ -33,7 +33,7 @@ class ChatSession:
         return {
             "session_id": str(self.session_id),
             "tenant_id": self.tenant_id,
-            "chatbot_id": self.chatbot_id,
+            "chatbot_id": str(self.chatbot_id),
             "embedding_model": self.embedding_model.to_dict(),
             "chat_model": self.chat_model.to_dict(),
             "chatbot_filter": self.chatbot_filter,

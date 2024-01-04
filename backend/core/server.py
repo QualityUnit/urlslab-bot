@@ -75,9 +75,8 @@ def initial_security_check():
 
 def create_app() -> FastAPI:
     # update steps and init
-    if config.ENV == "prod":
-        version_manager = VersionManager()
-        version_manager.setup()
+    version_manager = VersionManager()
+    version_manager.setup()
 
     initial_security_check()
 
