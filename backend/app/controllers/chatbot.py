@@ -65,7 +65,7 @@ class ChatbotController(BaseController[Chatbot]):
         )
 
     async def update(self,
-                     id: str,
+                     id: UUID,
                      title: str,
                      tenant_id: str,
                      system_prompt: str,
@@ -85,7 +85,7 @@ class ChatbotController(BaseController[Chatbot]):
         """
         chatbot_exists = await self.chatbot_repository.get_by_id(tenant_id=tenant_id, chatbot_id=id)
         if not chatbot_exists:
-            raise NotFoundException(f"Chatbot with id {id} and tenant id {tenant_id} not found")
+            raise NotFoundException(f"Chatbot with id {str(id)} and tenant id {tenant_id} not found")
 
         return await self.chatbot_repository.update(
             {
@@ -99,7 +99,7 @@ class ChatbotController(BaseController[Chatbot]):
             }
         )
 
-    async def delete_chatbot(self, id: str, tenant_id: str) -> None:
+    async def delete_chatbot(self, id: UUID, tenant_id: str) -> None:
         """
         Deletes a Chatbot
         :param id: the id of the chatbot

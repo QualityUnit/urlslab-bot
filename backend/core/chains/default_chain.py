@@ -15,11 +15,9 @@ class DefaultChainFactory(BaseUrlslabChainFactory):
 
     def __init__(self,
                  document_repository: DocumentRepository,
-                 session: ChatSession,
-                 user_id: int):
+                 session: ChatSession):
         self.document_repository = document_repository
         self.session = session
-        self.user_id = user_id
         self.sources = []
 
     def create_chain(self) -> Chain:

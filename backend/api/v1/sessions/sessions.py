@@ -18,7 +18,6 @@ session_router = APIRouter()
 @session_router.post("/{session_id}/stream")
 async def stream_chatbot_response(
         session_id: str,
-        request: Request,
         chat_completion_request: ChatCompletionRequest,
         session_controller: SessionController = Depends(Factory().get_session_controller),
 ) -> Response:
@@ -27,7 +26,7 @@ async def stream_chatbot_response(
     except ValueError:
         raise BadRequestException("Invalid session id")
 
-    return session_controller.stream_chatbot_response(request.user.id, UUID(session_id), chat_completion_request)
+    return session_controller.stream_chatbot_response(UUID(session_id), chat_completion_request)
 
 
 @session_router.get("/{session_id}/sources")

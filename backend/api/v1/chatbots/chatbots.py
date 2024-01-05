@@ -52,6 +52,11 @@ async def update_chatbot(
         tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
         chatbot_controller: ChatbotController = Depends(Factory().get_chatbot_controller),
 ) -> ChatbotResponse:
+    try:
+        chatbot_id = UUID(chatbot_id)
+    except ValueError:
+        raise ValueError(f"Invalid chatbot id {chatbot_id}")
+
     # 404 if tenant does not exist
     await tenant_controller.get_by_id(tenant_id)
 
@@ -73,6 +78,11 @@ async def delete_chatbot(
         tenant_controller: TenantController = Depends(Factory().get_tenant_controller),
         chatbot_controller: ChatbotController = Depends(Factory().get_chatbot_controller),
 ) -> Completed:
+    try:
+        chatbot_id = UUID(chatbot_id)
+    except ValueError:
+        raise ValueError(f"Invalid chatbot id {chatbot_id}")
+
     # 404 if tenant does not exist
     await tenant_controller.get_by_id(tenant_id)
 

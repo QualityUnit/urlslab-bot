@@ -40,28 +40,22 @@ class SessionController:
         self.settings_repository = settings_repository
 
     def stream_chatbot_response(self,
-                                user_id: int,
                                 session_id: UUID,
                                 chat_completion_request: ChatCompletionRequest) -> StreamingResponse:
         session = self.session_repository.get_by_id(session_id=session_id)
         if session is None:
             raise NotFoundException("Session not found")
 
-        if session.user_id != user_id:
-            raise NotFoundException("Session not found")
-
         return StreamingResponse(
-            self._stream_chatbot_response(user_id, session, chat_completion_request),
+            self._stream_chatbot_response(session, chat_completion_request),
             media_type="text/event-stream")
 
     async def _stream_chatbot_response(self,
-                                       user_id: int,
                                        session: ChatSession,
                                        chat_completion_request: ChatCompletionRequest) -> typing.AsyncIterable[str]:
         # creating chain
         chain_factory = DefaultChainFactory(document_repository=self.document_repository,
-                                            session=session,
-                                            user_id=user_id)
+                                            session=session)
         chain = chain_factory.create_chain()
 
         # chain created - updating session message history
