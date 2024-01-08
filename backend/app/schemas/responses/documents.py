@@ -9,7 +9,7 @@ class DocumentResponse(BaseModel):
     content: str = Field(..., description="The content of the document", example="document content")
     document_id: str = Field(..., description="Document ID", example="00000000-0000-0000-0000-000000000000")
     source: str = Field(..., description="Document source", example="document source")
-    tenant_id: int = Field(..., description="Tenant ID", example=1)
+    tenant_id: Optional[str] = Field(..., description="Tenant ID", example=1)
     score: Optional[float] = Field(..., description="Document score", example=0.1)
     updated_at: str = Field(..., description="Document updated at", example="2021-01-01T00:00:00.000000")
 

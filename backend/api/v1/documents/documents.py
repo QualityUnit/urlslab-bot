@@ -50,6 +50,15 @@ async def upsert_document(
                                                    document_upsert)
 
 
+@document_router.post("/global-doc/upsert", response_model=DocumentResponse)
+async def upsert_global_document(
+        document_upsert: DocumentUpsert,
+        document_controller: DocumentController = Depends(Factory().get_document_controller),
+) -> DocumentResponse:
+    return await document_controller.upsert_single(None,
+                                                   document_upsert)
+
+
 @document_router.post("/upload/{tenant_id}", response_model=DocumentResponse)
 async def upload_document_file(
         tenant_id: str,

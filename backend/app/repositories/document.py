@@ -105,6 +105,7 @@ class DocumentRepository:
                         "source": doc.source,
                         "chunk_id": doc.chunk_id,
                         "updated_at": doc.updated_at,
+                        "is_global": tenant_id is None,
                     },
                     vector=doc.vector,
                 ) for doc in documents

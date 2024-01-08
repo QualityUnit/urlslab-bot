@@ -1,4 +1,5 @@
 import uuid
+from typing import Optional
 from uuid import UUID
 
 from fastapi import UploadFile, File
@@ -38,7 +39,7 @@ class DocumentController:
         urlslab_docs = await self.document_repository.get_by_tenant_id(tenant_id)
         return self._convert_docs_to_response(urlslab_docs)
 
-    async def upsert_single(self, tenant_id: str, documents_upsert: DocumentUpsert):
+    async def upsert_single(self, tenant_id: Optional[str], documents_upsert: DocumentUpsert):
         rsp = await self.upsert(tenant_id, [documents_upsert])
         return self._convert_docs_to_response(rsp, merge=True)
 
@@ -62,11 +63,11 @@ class DocumentController:
 
         return response
 
-    async def upsert_bulk(self, tenant_id: str, documents_upsert: list[DocumentUpsert]):
+    async def upsert_bulk(self, tenant_id: Optional[str], documents_upsert: list[DocumentUpsert]):
         rsp = await self.upsert(tenant_id, documents_upsert)
         return self._convert_docs_to_response(rsp)
 
-    async def upsert(self, tenant_id: str, documents_upsert: list[DocumentUpsert]):
+    async def upsert(self, tenant_id: Optional[str], documents_upsert: list[DocumentUpsert]):
         docs = self._convert_document_upsert_to_urlslab_document(tenant_id, documents_upsert)
         doc_ids = set([doc.document_id for doc in filter(lambda doc: doc.document_id is not None, docs)])
         if doc_ids is not None and len(doc_ids) > 0:
@@ -88,7 +89,7 @@ class DocumentController:
         await self.document_repository.delete_by_id(tenant_id, [document_id])
 
     @staticmethod
-    def _convert_document_upsert_to_urlslab_document(tenant_id: str,
+    def _convert_document_upsert_to_urlslab_document(tenant_id: Optional[str],
                                                      documents_upsert: list[DocumentUpsert]):
         docs = []
         for doc in documents_upsert:
